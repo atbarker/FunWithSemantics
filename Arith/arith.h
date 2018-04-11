@@ -24,9 +24,12 @@ typedef struct exp{
     }operation;    
 }ast;
 
-//some sort of constructor
+//create an AST node that holds an integer expression
+ast * intExpresstion(int number);
+//create an AST node that performs an operation with two child ASTs
+ast * arithExpression(char operator, ast* c1, ast* c2);
 
-//evaluation, recursive
-int eval();
+//evaluation, recursive, will evaluate an AST and return an integer
+int eval(ast *a);
 
 #endif
