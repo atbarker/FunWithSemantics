@@ -2,13 +2,13 @@
 #define ARITH_H
 
 enum type{
-    integer_exp = 1,
+    integer_exp = 0,
     add_exp = 1,
     mult_exp = 2
 };
 
 typedef struct exp{
-    enum type; 
+    enum type typeExp; 
     union {
 	int integerExp;
 	struct { 
