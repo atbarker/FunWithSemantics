@@ -1,4 +1,6 @@
 #include "arith.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 ast * intExpression(int number){
 	ast *a = malloc(sizeof(ast));
