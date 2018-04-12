@@ -41,8 +41,20 @@ int eval(ast *a){
     int result;
     if(a.typeExp == add_exp){
         left = eval(a->operation.addExp.left);
-	right = eval(a->operation.addExp.right);
-	result = left + right;
+		right = eval(a->operation.addExp.right);
+		result = left + right;
+    }
+    else if(a.typeExp == mult_exp){
+    	left = eval(a->operation.multExp.left);
+		right = eval(a->operation.multExp.right);
+		result = left + right;
+    }
+    else if(a.typeExp == expon_exp){
+    	int b = eval(a->operation.expon.left);
+    	int c = eval(a->operation.expon.right);
+    	for(int i = 0, i < c, i++){
+    		result *= b;
+    	}
     }
     return result;
 }
