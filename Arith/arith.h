@@ -4,7 +4,8 @@
 enum type{
     integer_exp = 0,
     add_exp = 1,
-    mult_exp = 2
+    mult_exp = 2,
+    expon_exp = 3
 };
 
 typedef struct exp{
@@ -21,6 +22,11 @@ typedef struct exp{
 	    struct exp* left;
 	    struct exp* right;
 	} multExp;
+	struct {
+            char operator;
+	    struct exp* left;
+	    struct exp* right;
+	} expon;
     }operation;    
 }ast;
 

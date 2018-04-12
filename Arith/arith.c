@@ -22,6 +22,8 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 		a->operation.multExp.operator = operator;
 		a->operation.multExp.left = c1;
 		a->operation.multExp.right = c2;
+	}else if(operator == '^'){
+
 	}
 	else{
 		printf("AHHHH Not Good\n");
