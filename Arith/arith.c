@@ -30,4 +30,8 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
+int eval(ast *a){
+    return 0;
+}
+
 
