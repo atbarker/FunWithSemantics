@@ -23,7 +23,10 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 		a->operation.multExp.left = c1;
 		a->operation.multExp.right = c2;
 	}else if(operator == '^'){
-
+		a->typeExp = expon_exp;
+		a->operation.expon.operator = operator;
+		a->operation.expon.left = c1;
+		a->operation.expon.right = c2;
 	}
 	else{
 		printf("AHHHH Not Good\n");
@@ -33,7 +36,15 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 }
 
 int eval(ast *a){
-    return 0;
+    int left;
+    int right;
+    int result;
+    if(a.typeExp == add_exp){
+        left = eval(a->operation.addExp.left);
+	right = eval(a->operation.addExp.right);
+	result = left + right;
+    }
+    return result;
 }
 
 
