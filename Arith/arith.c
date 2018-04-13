@@ -40,7 +40,7 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
-// 
+// This function runs through the AST and evaluates each level of expression parent, child nodes
 int eval(ast *a){
     int left;
     int right;

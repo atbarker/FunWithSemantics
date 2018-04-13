@@ -31,7 +31,7 @@ typedef struct exp{
 }ast;
 
 //create an AST node that holds an integer expression
-ast * intExpresstion(int number);
+ast * intExpression(int number);
 //create an AST node that performs an operation with two child ASTs
 ast * arithExpression(char operator, ast* c1, ast* c2);
 
