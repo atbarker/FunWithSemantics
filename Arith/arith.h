@@ -1,3 +1,5 @@
+//Austen Barker and Staunton Sample
+
 #ifndef ARITH_H
 #define ARITH_H
 //creates a marking system for which operation we are using in eval.

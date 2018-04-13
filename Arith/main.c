@@ -1,3 +1,5 @@
+//Austen Barker and Staunton Sample
+
 #include "arith.h"
 #include <stdlib.h>
 #include <stdio.h>
