@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//This assignment was created by Austen Barker (1.5 hours) and Staunton Sample (1.5 hours)
+
+//Assessment of an integer. Accepts an integer as an argument and assigns it a leaf in an AST
 ast * intExpression(int number){
 	ast *a = malloc(sizeof(ast));
 	a->typeExp = integer_exp;
@@ -9,6 +12,8 @@ ast * intExpression(int number){
 	return a;
 }
 
+// Accepts parent and child nodes in an AST. Evaluates type of operation for the parent node. 
+// The function then assigns children a position inside the AST struct
 ast * arithExpression(char operator, ast* c1, ast* c2){
 	ast *a = malloc(sizeof(ast));
 	if(operator == '+'){
@@ -35,11 +40,15 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
+// 
 int eval(ast *a){
     int left;
     int right;
     int result;
-    if(a->typeExp == add_exp){
+    if(a->typeExp == integer_exp){
+    	result = a->operation.integerExp;
+    }
+    else if(a->typeExp == add_exp){
         left = eval(a->operation.addExp.left);
 		right = eval(a->operation.addExp.right);
 		result = left + right;

@@ -1,13 +1,13 @@
 #ifndef ARITH_H
 #define ARITH_H
-
+//creates a marking system for which operation we are using in eval.
 enum type{
     integer_exp = 0,
     add_exp = 1,
     mult_exp = 2,
     expon_exp = 3
 };
-
+// Using a union, this creates a struct , for the assessment of mult, add, and exponentiation. Called AST
 typedef struct exp{
     enum type typeExp; 
     union {
