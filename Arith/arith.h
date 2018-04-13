@@ -11,22 +11,22 @@ enum type{
 typedef struct exp{
     enum type typeExp; 
     union {
-	int integerExp;
-	struct { 
-	    char operator;
-	    struct exp* left;
-	    struct exp* right;
-	} addExp;
-	struct {
-	    char operator;
-	    struct exp* left;
-	    struct exp* right;
-	} multExp;
-	struct {
+	    int integerExp;
+	    struct { 
+	        char operator;
+	        struct exp* left;
+	        struct exp* right;
+	    } addExp;
+	    struct {
+	        char operator;
+	        struct exp* left;
+	        struct exp* right;
+	    } multExp;
+	    struct {
             char operator;
-	    struct exp* left;
-	    struct exp* right;
-	} expon;
+	        struct exp* left;
+	        struct exp* right;
+	    } expon;
     }operation;    
 }ast;
 
