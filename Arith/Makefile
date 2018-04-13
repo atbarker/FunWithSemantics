@@ -3,6 +3,5 @@ all:
 
 clean:
 	rm arith
-	rm *.o
 
 .PHONY: clean
