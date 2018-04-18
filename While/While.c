@@ -17,21 +17,21 @@ ast * intExpression(int number){
 ast * arithExpression(char operator, ast* c1, ast* c2){
 	ast *a = malloc(sizeof(ast));
 	if(operator == '+'){
-		a->typeExp = add_exp;
-		a->operation.addExp.operator = operator;
-		a->operation.addExp.left = c1;
-		a->operation.addExp.right = c2;
+		a->typeExp = arith_exp;
+		a->operation.arithExp.operator = operator;
+		a->operation.arithExp.left = c1;
+		a->operation.arithExp.right = c2;
 	}
 	else if(operator == '*'){
-		a->typeExp = mult_exp;
-		a->operation.multExp.operator = operator;
-		a->operation.multExp.left = c1;
-		a->operation.multExp.right = c2;
+		a->typeExp = arith_exp;
+		a->operation.arithExp.operator = operator;
+		a->operation.arithExp.left = c1;
+		a->operation.arithExp.right = c2;
 	}else if(operator == '^'){
-		a->typeExp = expon_exp;
-		a->operation.expon.operator = operator;
-		a->operation.expon.left = c1;
-		a->operation.expon.right = c2;
+		a->typeExp = arith_exp;
+		a->operation.arithExp.operator = operator;
+		a->operation.arithExp.left = c1;
+		a->operation.arithExp.right = c2;
 	}
 	else{
 		printf("AHHHH Not Good\n");
@@ -40,14 +40,14 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
-ast * negExpression(ast* c1){
+ast * negExpression(char operator, ast* c1){
 	ast *a = malloc(sizeof(ast));
 	if (c1->typeExp == neg_exp){
 		if(c1->operation.negExp > 0){
 			c1->operation.negExp = 0;
 		}
 		else{
-			c1->operation.negExp = 1
+			c1->operation.negExp = 1;
 		}
 	}
 	return c1;
@@ -63,7 +63,7 @@ ast * compositionExpression(ast *c1, ast *c2){
     return a;
 }
 
-ast * ifExpression(){i
+ast * ifExpression(){
     ast *a = malloc(sizeof(ast));
     return a;
 }
@@ -78,18 +78,27 @@ ast * skipExpression(){
     return a;
 }
 
-ast * 
+//handles variable assignment
+ast * variableExpression(ast *c1){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}	
+
+
 // create an AST node that performs a command evalutaion
-ast * commandExpression(char operator, ast* c1, ast* c2);
+ast * commandExpression(char operator, ast* c1, ast* c2){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
 // This function runs through the AST and evaluates each level of expression parent, child nodes recursively
 int eval(ast *a){
     int left;
     int right;
     int result = 0;
-    if(a->typeExp == integer_exp){
+    /*if(a->typeExp == integer_exp){
     	result = a->operation.integerExp;
     }
-    else if(a->typeExp == add_exp){
+    else if(a->typeExp == arith_exp){
         left = eval(a->operation.addExp.left);
 		right = eval(a->operation.addExp.right);
 		result = left + right;
@@ -110,7 +119,7 @@ int eval(ast *a){
     		d = d * b;
     	}
     	result = d;
-    }
+    }*/
     return result;
 }
 

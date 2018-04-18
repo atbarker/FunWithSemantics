@@ -1,5 +1,5 @@
 all:
-	gcc -g -o arith arith.c main.c
+	gcc -g -o while While.c main.c
 
 clean:
 	rm arith

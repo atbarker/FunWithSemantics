@@ -8,7 +8,7 @@ int main(){
 	ast *left = intExpression(5);
 	ast *right = intExpression(4);
 	//4 + 5
-    ast *first = arithExpression('+',left,right);
+    /*ast *first = arithExpression('+',left,right);
     int result = eval(first);
     printf("Result 1: %d\n", result);
     
@@ -35,6 +35,6 @@ int main(){
     //5 * (5^4)
     ast *sixth = arithExpression('*', fourth, right);
     result = eval(sixth);
-    printf("Result 6: %d\n", result);
+    printf("Result 6: %d\n", result);*/
     return 0;
 }
