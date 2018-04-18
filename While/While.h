@@ -5,13 +5,17 @@ enum type{
     integer_exp = 0,
     add_exp = 1,
     mult_exp = 2,
-    expon_exp = 3
+    expon_exp = 3,
+    bool_exp = 4,
+    command_exp = 5,
+    neg_exp = 6
 };
 // Using a union, this creates a struct , for the assessment of mult, add, and exponentiation. Called AST
 typedef struct exp{
     enum type typeExp; 
     union {
 	    int integerExp;
+	    int negExp;
 	    struct { 
 	        char operator;
 	        struct exp* left;
@@ -48,6 +52,8 @@ ast * arithExpression(char operator, ast* c1, ast* c2);
 ast * boolExpression(char operator, ast* c1, ast* c2);
 // create an AST node that performs a command evalutaion
 ast * commandExpression(char operator, ast* c1, ast* c2);
+// evaluates the negation of a node
+ast * negExpression(char operator, ast* c1)
 
 //evaluation, recursive, will evaluate an AST and return an integer
 int eval(ast *a);
