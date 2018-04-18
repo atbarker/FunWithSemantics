@@ -52,6 +52,33 @@ ast * negExpression(ast* c1){
 	}
 	return c1;
 }
+
+ast * assignmentExpression(){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
+
+ast * compositionExpression(ast *c1, ast *c2){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
+
+ast * ifExpression(){i
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
+
+ast * whileExpression(){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
+
+ast * skipExpression(){
+    ast *a = malloc(sizeof(ast));
+    return a;
+}
+
+ast * 
 // create an AST node that performs a command evalutaion
 ast * commandExpression(char operator, ast* c1, ast* c2);
 // This function runs through the AST and evaluates each level of expression parent, child nodes recursively
