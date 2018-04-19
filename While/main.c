@@ -1,6 +1,6 @@
 //Austen Barker and Staunton Sample
 
-#include "arith.h"
+#include "While.h"
 #include <stdlib.h>
 #include <stdio.h>
 
