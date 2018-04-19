@@ -49,15 +49,9 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 
 ast * negExpression(char operator, ast* c1){
 	ast *a = malloc(sizeof(ast));
-	if (c1->typeExp == neg_exp){
-		if(c1->operation.negExp > 0){
-			c1->operation.negExp = 0;
-		}
-		else{
-			c1->operation.negExp = 1;
-		}
-	}
-	return c1;
+	a->operation.negExp.operator = '~';
+	a->operation.negExp.child = c1;
+	return a;
 }
 
 ast * compExpression(char operator, ast *c1, ast *c2){
@@ -107,32 +101,76 @@ ast * assignExpression(char operator, ast* variable, ast* expression){
 int eval(ast *a){
     int left;
     int right;
+    int cond;
     int result = 0;
-    /*if(a->typeExp == integer_exp){
+    if(a->typeExp == integer_exp){
     	result = a->operation.integerExp;
     }
     else if(a->typeExp == arith_exp){
-        left = eval(a->operation.addExp.left);
-		right = eval(a->operation.addExp.right);
-		result = left + right;
+        left = eval(a->operation.arithExp.left);
+	right = eval(a->operation.arithExp.right);
+	char op = a->operation.arithExp.operator;
+	if(op == '+'){
+            result = left + right;
+	}else if(op == '*'){
+            result = left * right;
+	}else if(op == '-'){
+            result = left - right;
+	}else if(op == '='){
+            //problem
+	}else{
+            //problem
+	}
     }
-    else if(a->typeExp == mult_exp){
-    	left = eval(a->operation.multExp.left);
-		right = eval(a->operation.multExp.right);
-		result = left * right;
+    else if(a->typeExp == bool_exp){
+    	left = eval(a->operation.boolean.left);
+	right = eval(a->operation.boolean.right);
+        char op = a->operation.boolean.operator;
+	if(op == '='){
+            result = left == right;
+	}else if(op == '<'){
+            result = left < right;
+	}else if(op == '&'){
+            result = left && right;
+	}else if(op == '|'){
+            result = left || right;
+	}else{
+
+	}
+	
     }
-    else if(a->typeExp == expon_exp){
-    	int b = eval(a->operation.expon.left);
-    	//printf("This is B %d\n", b);
-    	int c = eval(a->operation.expon.right);
-    	//printf("This is C %d\n", c);
-    	int d = b;
-    	for(int i = 0; i < c-1; i++){
-    		//printf("current result %d\n", d);
-    		d = d * b;
-    	}
-    	result = d;
-    }*/
+    else if(a->typeExp == skip_exp){
+        //executes a skip
+    }else if(a->typeExp == neg_exp){
+        //negates a boolean
+	left = eval(a->operation.negExp.child);
+        if(left == 0){
+            result = 1;
+	}else{
+	    result = 0;
+	}	    
+    }else if(a->typeExp == assign_exp){
+        //enters into the state
+	left = eval(a->operation.assignCommand.expression);
+    }else if(a->typeExp == comp_exp){
+        //evaluates a composition
+	left = eval(a->operation.compCommand.left);
+	right = eval(a->operation.compCommand.right);
+    }else if(a->typeExp == if_exp){
+        //evaluates an if
+	cond = eval(a->operation.ifCommand.condition);
+	if(cond == 1){
+            result = eval(a->operation.ifCommand.body1);
+	}else{
+            result = eval(a->operation.ifCommand.body2);
+	}
+    }else if(a->typeExp == while_exp){
+        //evaluates a loop
+    }else if(a->typeExp == var_exp){
+        //grabs our shit from the variable store
+    }else{
+        //error state, something went wrong
+    }
     return result;
 }
 

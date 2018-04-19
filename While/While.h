@@ -28,7 +28,10 @@ typedef struct exp{
     union {
 	    int integerExp;
 	    char variableExp[20];
-	    int negExp;
+	    struct{
+		char operator;
+		struct exp* child;
+	    } negExp;
 	    struct { 
 	        char operator;
 	        struct exp* left;
