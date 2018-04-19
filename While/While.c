@@ -12,6 +12,13 @@ ast * intExpression(int number){
 	return a;
 }
 
+ast * variableExp(char name[20]){
+    ast *a = malloc(sizeof(ast));
+    a->typeExp = var_exp;
+    //a->operation.variableExp = name;
+    return a;
+}
+
 // Accepts parent and child nodes in an AST. Evaluates type of operation for the parent node. 
 // The function then assigns children a position inside the AST parent node
 ast * arithExpression(char operator, ast* c1, ast* c2){

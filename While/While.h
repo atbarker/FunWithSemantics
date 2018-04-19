@@ -10,7 +10,8 @@ enum type{
     assign_exp = 5,
     comp_exp = 6,
     if_exp = 7,
-    while_exp = 8
+    while_exp = 8,
+    var_exp = 9
 };
 
 enum commandType{
@@ -26,6 +27,7 @@ typedef struct exp{
     enum type typeExp; 
     union {
 	    int integerExp;
+	    char variableExp[20];
 	    int negExp;
 	    struct { 
 	        char operator;
@@ -73,6 +75,8 @@ typedef struct exp{
 
 //create an AST node that holds an integer expression
 ast * intExpression(int number);
+//variable name
+ast * variableExp(char name[20]);
 //create an AST node that performs an operation with two child ASTs
 ast * arithExpression(char operator, ast* c1, ast* c2);
 // create an AST node that performs a boolean evaluation
