@@ -108,62 +108,72 @@ int eval(ast *a){
     }
     else if(a->typeExp == arith_exp){
         left = eval(a->operation.arithExp.left);
-	right = eval(a->operation.arithExp.right);
-	char op = a->operation.arithExp.operator;
-	if(op == '+'){
+		right = eval(a->operation.arithExp.right);
+		char op = a->operation.arithExp.operator;
+		if(op == '+'){
             result = left + right;
-	}else if(op == '*'){
+		}
+		else if(op == '*'){
             result = left * right;
-	}else if(op == '-'){
+		}
+		else if(op == '-'){
             result = left - right;
-	}else if(op == '='){
-            //problem
-	}else{
-            //problem
-	}
+		}	
+		else{
+            printf("Eval failed at Arith\n");
+		}
     }
     else if(a->typeExp == bool_exp){
     	left = eval(a->operation.boolean.left);
-	right = eval(a->operation.boolean.right);
+		right = eval(a->operation.boolean.right);
         char op = a->operation.boolean.operator;
-	if(op == '='){
+		if(op == '='){
             result = left == right;
-	}else if(op == '<'){
+		}
+		else if(op == '<'){
             result = left < right;
-	}else if(op == '&'){
+		}
+		else if(op == '&'){
             result = left && right;
-	}else if(op == '|'){
+		}
+		else if(op == '|'){
             result = left || right;
-	}else{
-
-	}
+		}
+		else{
+			printf("Eval failed at Bool\n");
+		}
 	
     }
     else if(a->typeExp == skip_exp){
         //executes a skip
-    }else if(a->typeExp == neg_exp){
+        eval(a->operation.skipCommand.child);
+
+    }
+    else if(a->typeExp == neg_exp){
         //negates a boolean
-	left = eval(a->operation.negExp.child);
+		left = eval(a->operation.negExp.child);
         if(left == 0){
             result = 1;
-	}else{
+		}
+		else{
 	    result = 0;
-	}	    
+		}	    
     }else if(a->typeExp == assign_exp){
         //enters into the state
-	left = eval(a->operation.assignCommand.expression);
+		left = eval(a->operation.assignCommand.expression);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
-	left = eval(a->operation.compCommand.left);
-	right = eval(a->operation.compCommand.right);
+		left = eval(a->operation.compCommand.left);
+		right = eval(a->operation.compCommand.right);
     }else if(a->typeExp == if_exp){
         //evaluates an if
-	cond = eval(a->operation.ifCommand.condition);
-	if(cond == 1){
+		cond = eval(a->operation.ifCommand.condition);
+		if(cond == 1){
             result = eval(a->operation.ifCommand.body1);
-	}else{
+		}
+		else{
             result = eval(a->operation.ifCommand.body2);
-	}
+		}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
     }else if(a->typeExp == var_exp){
