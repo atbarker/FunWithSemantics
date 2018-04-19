@@ -53,43 +53,49 @@ ast * negExpression(char operator, ast* c1){
 	return c1;
 }
 
-ast * assignmentExpression(){
+ast * compExpression(char operator, ast *c1, ast *c2){
     ast *a = malloc(sizeof(ast));
+    a->typeExp = comp_exp;
+    a->operation.compCommand.left = c1;
+    a->operation.compCommand.right = c2;
     return a;
 }
 
-ast * compositionExpression(ast *c1, ast *c2){
+ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2){
     ast *a = malloc(sizeof(ast));
+    a->typeExp = if_exp;
+    a->operation.ifCommand.condition = condition;
+    a->operation.ifCommand.body1 = c1;
+    a->operation.ifCommand.body2 = c2;
     return a;
 }
 
-ast * ifExpression(){
+ast * whileExpression(char operator, ast* condition, ast* body){
     ast *a = malloc(sizeof(ast));
+    a->typeExp = while_exp;
+    a->operation.whileCommand.condition = condition;
+    a->operation.whileCommand.body = body;
     return a;
 }
 
-ast * whileExpression(){
+ast * skipExpression(char operator, ast* c1){
     ast *a = malloc(sizeof(ast));
-    return a;
-}
-
-ast * skipExpression(){
-    ast *a = malloc(sizeof(ast));
+    a->typeExp = skip_exp;
+    a->operation.skipCommand.child = c1;
     return a;
 }
 
 //handles variable assignment
-ast * variableExpression(ast *c1){
+ast * assignExpression(char operator, ast* variable, ast* expression){
     ast *a = malloc(sizeof(ast));
+    a->typeExp = assign_exp;
+    a->operation.assignCommand.variable = variable;
+    a->operation.assignCommand.expression = expression;
     return a;
 }	
+     
 
 
-// create an AST node that performs a command evalutaion
-ast * commandExpression(char operator, ast* c1, ast* c2){
-    ast *a = malloc(sizeof(ast));
-    return a;
-}
 // This function runs through the AST and evaluates each level of expression parent, child nodes recursively
 int eval(ast *a){
     int left;

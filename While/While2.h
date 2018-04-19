@@ -5,12 +5,8 @@ enum type{
     integer_exp = 0,
     arith_exp = 1,
     bool_exp = 2,
-    skip_exp = 3,
-    neg_exp = 4,
-    assign_exp = 5,
-    comp_exp = 6,
-    if_exp = 7,
-    while_exp = 8
+    command_exp = 3,
+    neg_exp = 4
 };
 
 enum commandType{
@@ -77,16 +73,8 @@ ast * intExpression(int number);
 ast * arithExpression(char operator, ast* c1, ast* c2);
 // create an AST node that performs a boolean evaluation
 ast * boolExpression(char operator, ast* c1, ast* c2);
-// create an AST node that creates a "skip" node
-ast * skipExpression(char operator, ast* c1);
-// AST for an assignment operation
-ast * assignExpression(char operator, ast* variable, ast* expression);
-// AST for a composition expression
-ast * compExpression(char operator, ast* c1, ast* c2);
-// AST for an if statement
-ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2);
-// AST for a loop
-ast * whileExpression(char operator, ast* condition, ast* body);
+// create an AST node that performs a command evalutaion
+ast * commandExpression(char operator, ast* c1, ast* c2);
 // evaluates the negation of a node
 ast * negExpression(char operator, ast* c1);
 
