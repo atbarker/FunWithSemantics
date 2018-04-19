@@ -37,9 +37,33 @@ typedef struct exp{
 	    struct {
 	    	char operator;
 		enum commandType cmd;
-	    	struct exp* left;
-	    	struct exp* right;
-	    } command;
+	    	struct exp* child;
+	    } skipCommand;
+	    struct {
+                char operator;
+		enum commandType cmd;
+		struct exp* variable;
+		struct exp* expression;
+            } assignCommand;
+	    struct {
+	        char operator;
+		enum commandType cmd;
+		struct exp* left;
+		struct exp* right;
+	    } compCommand;
+	    struct {
+		char operator;
+                enum commandType cmd;
+		struct exp* condition;
+		struct exp* body1;
+		struct exp* body2;
+	    } ifCommand;
+	    struct {
+		char operator;
+		enum commandType cmd;
+		struct exp* condition;
+		struct exp* body;
+	    } whileCommand;
     }operation;    
 }ast;
 
