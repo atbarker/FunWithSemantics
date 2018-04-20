@@ -27,7 +27,7 @@ typedef struct exp{
     enum type typeExp; 
     union {
 	    int integerExp;
-	    char variableExp[20];
+	    char *variableExp;
 	    struct{
 		char operator;
 		struct exp* child;
@@ -85,7 +85,7 @@ hashObject *hashArray[500];
 //create an AST node that holds an integer expression
 ast * intExpression(int number);
 //variable name
-ast * variableExp(char name[20]);
+ast * variableExp(char *name);
 //create an AST node that performs an operation with two child ASTs
 ast * arithExpression(char operator, ast* c1, ast* c2);
 // create an AST node that performs a boolean evaluation

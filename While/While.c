@@ -13,7 +13,7 @@ ast * intExpression(int number){
 }
 
 // Assessment of Right hand side of variable assignment
-ast * variableExp(char name[20]){
+ast * variableExp(char *name){
     ast *a = malloc(sizeof(ast));
     a->typeExp = var_exp;
     //a->operation.variableExp = name;
@@ -188,8 +188,7 @@ int eval(ast *a){
 		}
     }else if(a->typeExp == var_exp){
     	// int variableKey = insert(a->operation.assignCommand.variable, a->operation.assignCommand.expression);
-    	 
-       
+	result = fetch(a->operation.variableExp);   
     }else{
         //error state, something went wrong
     }
