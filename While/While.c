@@ -176,8 +176,8 @@ int eval(ast *a){
 		}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
-       while(a->operation.whileCommand.condition){
-    		a->operation.whileCommand.body;
+       if(a->operation.whileCommand.condition){
+    		result = eval(a->operation.whileCommand.body);
 		}
     }else if(a->typeExp == var_exp){
     	// int variableKey = insert(a->operation.assignCommand.variable, a->operation.assignCommand.expression);
