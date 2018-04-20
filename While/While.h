@@ -77,7 +77,7 @@ typedef struct exp{
 }ast;
 
 typedef struct hashObj{
-	char value;
+	int value;
 }hashObject;
 
 //create an AST node that holds an integer expression
@@ -105,4 +105,8 @@ ast * negExpression(char operator, ast* c1);
 int eval(ast *a);
 
 int hashKey(char *key);
+
+void insert(char *key, int *value);
+
+int fetch(char *key);
 #endif

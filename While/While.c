@@ -206,12 +206,12 @@ int hashKey(char *key){
 	while((c= *key++) != 0){
 		hash = ((hash << 5) + hash) + c; 
 	}
-	return hash %= 200; 
+	return hash %= 500; 
 }
 
 //Inserts the hash object(variable expression) into the array
 
-void insert(char *key, char *value) {
+void insert(char *key, int *value) {
 
 	int hashIndex = hashKey(key);
 	hashObject *store;
@@ -225,5 +225,19 @@ void insert(char *key, char *value) {
 		store->value = *value;
 	}
 }
+
+int fetch(char *key){
+	 int hashIndex = hashKey(key);
+	 hashObject *store;
+	 if(&hashArray[hashIndex] != NULL){
+	 	store = &hashArray[hashIndex];
+	 	return store -> value;
+	 }
+	 else{
+	 	printf("Object not found\n");
+	 }
+	 return 0;
+}
+
 
 
