@@ -176,12 +176,41 @@ int eval(ast *a){
 		}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
+       while(a->operation.whileCommand.condition){
+    		a->operation.whileCommand.body;
+		}
     }else if(a->typeExp == var_exp){
-        //grabs our shit from the variable store
+    	// int variableKey = insert(a->operation.assignCommand.variable, a->operation.assignCommand.expression);
+    	//  
+       
     }else{
         //error state, something went wrong
     }
     return result;
+}
+
+hashObject hashArray[500];
+
+//hashing function
+int hashKey(char *key){
+	return 0;
+}
+
+// insert the hash object(variable key and value) into the array
+
+void insert(char *key, char *value) {
+
+	int hashIndex = hashKey(key);
+	hashObject *store;
+    if(&hashArray[hashIndex] == NULL){
+    	store = malloc(sizeof(hashObject)); 
+    	store->value = *value;
+    	hashArray[hashIndex] = *store;
+	}
+	else{
+		store = &hashArray[hashIndex]; 
+		store->value = *value;
+	}
 }
 
 
