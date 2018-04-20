@@ -80,6 +80,8 @@ typedef struct hashObj{
 	int value;
 }hashObject;
 
+hashObject hashArray[500];
+
 //create an AST node that holds an integer expression
 ast * intExpression(int number);
 //variable name
@@ -106,7 +108,7 @@ int eval(ast *a);
 
 int hashKey(char *key);
 
-void insert(char *key, int *value);
+void insert(char *key, int value);
 
 int fetch(char *key);
 #endif

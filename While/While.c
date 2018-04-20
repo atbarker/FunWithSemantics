@@ -196,7 +196,7 @@ int eval(ast *a){
 }
 
 //Array to store hashtable for variables
-hashObject hashArray[500];
+
 
 //Hashing function for variable assignment.
 //Hash function is modified djb2 found http://www.cs.dartmouth.edu/~campbell/cs50/hash.c
@@ -211,18 +211,20 @@ int hashKey(char *key){
 
 //Inserts the hash object(variable expression) into the array
 
-void insert(char *key, int *value) {
+void insert(char *key, int value) {
 
 	int hashIndex = hashKey(key);
 	hashObject *store;
-    if(&hashArray[hashIndex] == NULL){
+    if(hashArray[hashIndex]){
     	store = malloc(sizeof(hashObject)); 
-    	store->value = *value;
+    	store->value = value;
     	hashArray[hashIndex] = *store;
+    	printf("New object stored at index: %d\n",hashIndex);
 	}
 	else{
-		store = &hashArray[hashIndex]; 
-		store->value = *value;
+		store = hashArray[hashIndex]; 
+		store->value = value;
+		printf("New value stored at: %d\n ", hashIndex);
 	}
 }
 
