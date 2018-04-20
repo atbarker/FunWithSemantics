@@ -12,6 +12,7 @@ ast * intExpression(int number){
 	return a;
 }
 
+// Assessment of Right hand side of variable assignment
 ast * variableExp(char name[20]){
     ast *a = malloc(sizeof(ast));
     a->typeExp = var_exp;
@@ -47,6 +48,7 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
+//Asssesment of a negation. Has one child.
 ast * negExpression(char operator, ast* c1){
 	ast *a = malloc(sizeof(ast));
 	a->operation.negExp.operator = '~';
@@ -54,6 +56,7 @@ ast * negExpression(char operator, ast* c1){
 	return a;
 }
 
+//Assesment of seq/ ";" operator. 
 ast * compExpression(char operator, ast *c1, ast *c2){
     ast *a = malloc(sizeof(ast));
     a->typeExp = comp_exp;
@@ -62,6 +65,7 @@ ast * compExpression(char operator, ast *c1, ast *c2){
     return a;
 }
 
+//Assessment of if-then statement.
 ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2){
     ast *a = malloc(sizeof(ast));
     a->typeExp = if_exp;
@@ -71,6 +75,7 @@ ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2){
     return a;
 }
 
+//Assesment of While operation node.
 ast * whileExpression(char operator, ast* condition, ast* body){
     ast *a = malloc(sizeof(ast));
     a->typeExp = while_exp;
@@ -79,6 +84,7 @@ ast * whileExpression(char operator, ast* condition, ast* body){
     return a;
 }
 
+//Assesment of skip node.
 ast * skipExpression(char operator, ast* c1){
     ast *a = malloc(sizeof(ast));
     a->typeExp = skip_exp;
@@ -86,7 +92,7 @@ ast * skipExpression(char operator, ast* c1){
     return a;
 }
 
-//handles variable assignment
+// Handles variable assignment. Combine L/R sides
 ast * assignExpression(char operator, ast* variable, ast* expression){
     ast *a = malloc(sizeof(ast));
     a->typeExp = assign_exp;
@@ -181,7 +187,7 @@ int eval(ast *a){
 		}
     }else if(a->typeExp == var_exp){
     	// int variableKey = insert(a->operation.assignCommand.variable, a->operation.assignCommand.expression);
-    	//  
+    	 
        
     }else{
         //error state, something went wrong
@@ -189,14 +195,21 @@ int eval(ast *a){
     return result;
 }
 
+//Array to store hashtable for variables
 hashObject hashArray[500];
 
-//hashing function
+//Hashing function for variable assignment.
+//Hash function is modified djb2 found http://www.cs.dartmouth.edu/~campbell/cs50/hash.c
 int hashKey(char *key){
-	return 0;
+	int hash = 5381;
+	int c;
+	while((c= *key++) != 0){
+		hash = ((hash << 5) + hash) + c; 
+	}
+	return hash %= 200; 
 }
 
-// insert the hash object(variable key and value) into the array
+//Inserts the hash object(variable expression) into the array
 
 void insert(char *key, char *value) {
 
