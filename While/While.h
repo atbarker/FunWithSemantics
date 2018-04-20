@@ -51,7 +51,7 @@ typedef struct exp{
 	    struct {
                 char operator;
 		enum commandType cmd;
-		struct exp* variable;
+		char *variable;
 		struct exp* expression;
             } assignCommand;
 	    struct {
@@ -93,7 +93,7 @@ ast * boolExpression(char operator, ast* c1, ast* c2);
 // create an AST node that creates a "skip" node
 ast * skipExpression(char operator, ast* c1);
 // AST for an assignment operation
-ast * assignExpression(char operator, ast* variable, ast* expression);
+ast * assignExpression(char operator, char *variable, ast* expression);
 // AST for a composition expression
 ast * compExpression(char operator, ast* c1, ast* c2);
 // AST for an if statement

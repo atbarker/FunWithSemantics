@@ -93,7 +93,7 @@ ast * skipExpression(char operator, ast* c1){
 }
 
 // Handles variable assignment. Combine L/R sides
-ast * assignExpression(char operator, ast* variable, ast* expression){
+ast * assignExpression(char operator, char *variable, ast* expression){
     ast *a = malloc(sizeof(ast));
     a->typeExp = assign_exp;
     a->operation.assignCommand.variable = variable;
@@ -166,7 +166,8 @@ int eval(ast *a){
 		}	    
     }else if(a->typeExp == assign_exp){
         //enters into the state
-		left = eval(a->operation.assignCommand.expression);
+	left = eval(a->operation.assignCommand.expression);
+	insert(a->operation.assignCommand.variable, left);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
 		left = eval(a->operation.compCommand.left);
