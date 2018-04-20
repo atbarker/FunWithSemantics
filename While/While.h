@@ -80,7 +80,7 @@ typedef struct hashObj{
 	int value;
 }hashObject;
 
-hashObject hashArray[500];
+hashObject *hashArray[500];
 
 //create an AST node that holds an integer expression
 ast * intExpression(int number);

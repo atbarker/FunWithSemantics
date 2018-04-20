@@ -215,10 +215,10 @@ void insert(char *key, int value) {
 
 	int hashIndex = hashKey(key);
 	hashObject *store;
-    if(hashArray[hashIndex]){
+    if(hashArray[hashIndex] == NULL){
     	store = malloc(sizeof(hashObject)); 
     	store->value = value;
-    	hashArray[hashIndex] = *store;
+    	hashArray[hashIndex] = store;
     	printf("New object stored at index: %d\n",hashIndex);
 	}
 	else{
@@ -231,8 +231,8 @@ void insert(char *key, int value) {
 int fetch(char *key){
 	 int hashIndex = hashKey(key);
 	 hashObject *store;
-	 if(&hashArray[hashIndex] != NULL){
-	 	store = &hashArray[hashIndex];
+	 if(hashArray[hashIndex] != NULL){
+	 	store = hashArray[hashIndex];
 	 	return store -> value;
 	 }
 	 else{
