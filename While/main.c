@@ -5,9 +5,11 @@
 #include <stdio.h>
 
 int main(){
-	ast *left = intExpression(5);
-	ast *right = intExpression(4);
-	
+    //create basic ast's for integer expressions.
+    ast *left = intExpression(5);
+    ast *right = intExpression(4);
+
+    //testing the hash table for storing variables	
     char *key = "h";
     int h = 6;
     insert(key, h);
