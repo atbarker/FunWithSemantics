@@ -163,6 +163,10 @@ int eval(ast *a){
 		else if(op == '-'){
             result = left - right;
 		}else if(op == '/'){
+	            if(right <= 0){
+			    printf("No divide by zero\n");
+			    return 0;
+		    }
                     result = left / right;
 		}	
 		else{
