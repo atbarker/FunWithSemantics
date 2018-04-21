@@ -16,7 +16,7 @@ ast * intExpression(int number){
 ast * variableExp(char *name){
     ast *a = malloc(sizeof(ast));
     a->typeExp = var_exp;
-    //a->operation.variableExp = name;
+    a->operation.variableExp = name;
     return a;
 }
 
@@ -35,7 +35,12 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 		a->operation.arithExp.operator = operator;
 		a->operation.arithExp.left = c1;
 		a->operation.arithExp.right = c2;
-	}else if(operator == '^'){
+	}else if(operator == '-'){
+		a->typeExp = arith_exp;
+		a->operation.arithExp.operator = operator;
+		a->operation.arithExp.left = c1;
+		a->operation.arithExp.right = c2;
+	}else if(operator == '/'){
 		a->typeExp = arith_exp;
 		a->operation.arithExp.operator = operator;
 		a->operation.arithExp.left = c1;
@@ -54,25 +59,25 @@ ast * booleanExpression(char operator, ast *c1, ast *c2){
 		a->typeExp = bool_exp;
 		a->operation.boolean.operator = operator;
 		a->operation.boolean.left = c1;
-		a->operation.boolean.left = c2;
+		a->operation.boolean.right = c2;
 	}
 	else if(operator == '<'){
 		a->typeExp = bool_exp;
 		a->operation.boolean.operator = operator;
 		a->operation.boolean.left = c1;
-		a->operation.boolean.left = c2;
+		a->operation.boolean.right = c2;
 	}
 	else if(operator == '&'){
 		a->typeExp = bool_exp;
 		a->operation.boolean.operator = operator;
 		a->operation.boolean.left = c1;
-		a->operation.boolean.left = c2;
+		a->operation.boolean.right = c2;
 	}
 	else if(operator == '|'){
 		a->typeExp = bool_exp;
 		a->operation.boolean.operator = operator;
 		a->operation.boolean.left = c1;
-		a->operation.boolean.left = c2;
+		a->operation.boolean.right = c2;
 	}
 	else{
 		printf("Something is horribly wrong at boolean\n");
@@ -83,6 +88,7 @@ ast * booleanExpression(char operator, ast *c1, ast *c2){
 //Asssesment of a negation. Has one child.
 ast * negExpression(char operator, ast* c1){
 	ast *a = malloc(sizeof(ast));
+	a->typeExp = neg_exp; 
 	a->operation.negExp.operator = '~';
 	a->operation.negExp.child = c1;
 	return a;
@@ -156,6 +162,8 @@ int eval(ast *a){
 		}
 		else if(op == '-'){
             result = left - right;
+		}else if(op == '/'){
+                    result = left / right;
 		}	
 		else{
             printf("Eval failed at Arith\n");
@@ -163,39 +171,55 @@ int eval(ast *a){
     }
     else if(a->typeExp == bool_exp){
     	left = eval(a->operation.boolean.left);
-		right = eval(a->operation.boolean.right);
+	right = eval(a->operation.boolean.right);
         char op = a->operation.boolean.operator;
-		if(op == '='){
-            result = left == right;
-		}
-		else if(op == '<'){
-            result = left < right;
-		}
-		else if(op == '&'){
-            result = left && right;
-		}
-		else if(op == '|'){
-            result = left || right;
-		}
-		else{
-			printf("Eval failed at Bool\n");
-		}
+	if(op == '='){
+            if(left == right){
+	        result = 1;
+	    }else{
+                result = 0;
+	    }
+	}
+	else if(op == '<'){
+            if(left < right){
+	        result = 1;
+	    }else{
+                result = 0;
+	    }
+	}
+	else if(op == '&'){
+            if(left & right){
+	        result = 1;
+	    }else{
+                result = 0;
+	    }
+	}
+	else if(op == '|'){
+            if(left || right){
+	        result = 1;
+	    }else{
+                result = 0;
+	    }
+	}
+	else{
+	    printf("Eval failed at Bool\n");
+	}
 	
     }
     else if(a->typeExp == skip_exp){
         //executes a skip
-        eval(a->operation.skipCommand.child);
+        //eval(a->operation.skipCommand.child);
 
     }
     else if(a->typeExp == neg_exp){
         //negates a boolean
-		left = eval(a->operation.negExp.child);
+	left = eval(a->operation.negExp.child);
         if(left == 0){
             result = 1;
-		}
-		else{
-	    	result = 0;
-		}	    
+	}
+	else{
+	    result = 0;
+	}	    
     }else if(a->typeExp == assign_exp){
         //enters into the state
 	left = eval(a->operation.assignCommand.expression);
@@ -215,11 +239,18 @@ int eval(ast *a){
 		}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
-       if(a->operation.whileCommand.condition){
-    		result = eval(a->operation.whileCommand.body);
-		}
+       int cond = eval(a->operation.whileCommand.condition);
+       printf("condition %d\n", cond);
+       if(cond == 1){
+	     printf("Executing loop\n");
+    	     while(1){
+		 eval(a->operation.whileCommand.body);
+		 cond = eval(a->operation.whileCommand.condition);
+		 if(cond != 1){break;}
+		 printf("continuing\n");
+             }
+       }
     }else if(a->typeExp == var_exp){
-    	// int variableKey = insert(a->operation.assignCommand.variable, a->operation.assignCommand.expression);
 	result = fetch(a->operation.variableExp);   
     }else{
         //error state, something went wrong
@@ -235,7 +266,7 @@ int eval(ast *a){
 int hashKey(char *key){
 	int hash = 5381;
 	int c;
-	while((c= *key++) != 0){
+	while((c = *key++) != 0){
 		hash = ((hash << 5) + hash) + c; 
 	}
 	return hash %= 500; 
@@ -256,7 +287,7 @@ void insert(char *key, int value) {
 	else{
 		store = hashArray[hashIndex]; 
 		store->value = value;
-		printf("New value stored at: %d\n ", hashIndex);
+		printf("New value stored at: %d\n", hashIndex);
 	}
 }
 
@@ -265,6 +296,7 @@ int fetch(char *key){
 	 hashObject *store;
 	 if(hashArray[hashIndex] != NULL){
 	 	store = hashArray[hashIndex];
+		printf("Object retrieved at index %d\n", hashIndex);
 	 	return store -> value;
 	 }
 	 else{

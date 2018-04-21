@@ -28,6 +28,7 @@ typedef struct exp{
     union {
 	    int integerExp;
 	    char *variableExp;
+	    int booleanSingle;
 	    struct{
 		char operator;
 		struct exp* child;
@@ -45,31 +46,26 @@ typedef struct exp{
 	    } boolean;
 	    struct {
 	    	char operator;
-		enum commandType cmd;
 	    	struct exp* child;
 	    } skipCommand;
 	    struct {
                 char operator;
-		enum commandType cmd;
 		char *variable;
 		struct exp* expression;
             } assignCommand;
 	    struct {
 	        char operator;
-		enum commandType cmd;
 		struct exp* left;
 		struct exp* right;
 	    } compCommand;
 	    struct {
 		char operator;
-                enum commandType cmd;
 		struct exp* condition;
 		struct exp* body1;
 		struct exp* body2;
 	    } ifCommand;
 	    struct {
 		char operator;
-		enum commandType cmd;
 		struct exp* condition;
 		struct exp* body;
 	    } whileCommand;
