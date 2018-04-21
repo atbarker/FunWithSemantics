@@ -162,7 +162,7 @@ int eval(ast *a){
             result = 1;
 		}
 		else{
-	    result = 0;
+	    	result = 0;
 		}	    
     }else if(a->typeExp == assign_exp){
         //enters into the state
