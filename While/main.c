@@ -25,10 +25,13 @@ int main(){
 
     //Tests '~'
     ast * three = negExpression('~', boolTest);
-    test = eval(three);
-    printf("The result of test for ~ should be 0, actual:%d\n", test); 
+    int threeTest = eval(three);
+    printf("The result of test for ~ should be 0, actual:%d\n", threeTest); 
 
-    ast *four =  
+    // ast *four = booleanExpression('=', left, right);
+    // int fourTest = eval(four);
+    // printf("The result of test for = should be 0, actual:%d\n", fourTest); 
+    
     //testing the hash table for storing variables	
     char *key = "h";
     int h = 6;

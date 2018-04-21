@@ -89,7 +89,7 @@ ast * variableExp(char *name);
 //create an AST node that performs an operation with two child ASTs
 ast * arithExpression(char operator, ast* c1, ast* c2);
 // create an AST node that performs a boolean evaluation
-ast * boolExpression(char operator, ast* c1, ast* c2);
+ast * booleanExpression(char operator, ast* c1, ast* c2);
 // create an AST node that creates a "skip" node
 ast * skipExpression(char operator, ast* c1);
 // AST for an assignment operation

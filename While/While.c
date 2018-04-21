@@ -48,6 +48,38 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 	return a;
 }
 
+ast * booleanExpression(char operator, ast *c1, ast *c2){
+	ast *a = malloc(sizeof(ast));
+	if(operator == '='){
+		a->typeExp = bool_exp;
+		a->operation.boolean.operator = operator;
+		a->operation.boolean.left = c1;
+		a->operation.boolean.left = c2;
+	}
+	else if(operator == '<'){
+		a->typeExp = bool_exp;
+		a->operation.boolean.operator = operator;
+		a->operation.boolean.left = c1;
+		a->operation.boolean.left = c2;
+	}
+	else if(operator == '&'){
+		a->typeExp = bool_exp;
+		a->operation.boolean.operator = operator;
+		a->operation.boolean.left = c1;
+		a->operation.boolean.left = c2;
+	}
+	else if(operator == '|'){
+		a->typeExp = bool_exp;
+		a->operation.boolean.operator = operator;
+		a->operation.boolean.left = c1;
+		a->operation.boolean.left = c2;
+	}
+	else{
+		printf("Something is horribly wrong at boolean\n");
+	}
+	return a;
+}
+
 //Asssesment of a negation. Has one child.
 ast * negExpression(char operator, ast* c1){
 	ast *a = malloc(sizeof(ast));
