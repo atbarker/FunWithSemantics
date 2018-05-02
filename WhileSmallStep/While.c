@@ -282,16 +282,16 @@ void insert(char *key, int value, hashObject **hashArray) {
 
 	int hashIndex = hashKey(key);
 	hashObject *store;
-    if(hashArray[hashIndex] == NULL){
-    	store = malloc(sizeof(hashObject)); 
-    	store->value = value;
-    	hashArray[hashIndex] = store;
-    	printf("New object stored at index: %d\n",hashIndex);
+        if(hashArray[hashIndex] == NULL){
+    	    store = calloc(1, sizeof(hashObject)); 
+    	    store->value = value;
+    	    hashArray[hashIndex] = store;
+    	    printf("New object stored at index: %d\n",hashIndex);
 	}
 	else{
-		store = hashArray[hashIndex]; 
-		store->value = value;
-		printf("New value stored at: %d\n", hashIndex);
+		//store = hashArray[hashIndex]; 
+		hashArray[hashIndex]->value = value;
+		//printf("New value stored at: %d\n", hashIndex);
 	}
 }
 
