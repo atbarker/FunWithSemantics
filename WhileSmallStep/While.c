@@ -286,10 +286,9 @@ void insert(char *key, int value, hashObject **hashArray) {
     	    store = calloc(1, sizeof(hashObject)); 
     	    store->value = value;
     	    hashArray[hashIndex] = store;
-    	    printf("New object stored at index: %d\n",hashIndex);
+    	    //printf("New object stored at index: %d\n",hashIndex);
 	}
-	else{
-		//store = hashArray[hashIndex]; 
+	else{ 
 		hashArray[hashIndex]->value = value;
 		//printf("New value stored at: %d\n", hashIndex);
 	}
@@ -299,9 +298,8 @@ int fetch(char *key, hashObject **hashArray){
 	 int hashIndex = hashKey(key);
 	 hashObject *store;
 	 if(hashArray[hashIndex] != NULL){
-	 	store = hashArray[hashIndex];
-		printf("Object retrieved at index %d\n", hashIndex);
-	 	return store -> value;
+		//printf("Object retrieved at index %d\n", hashIndex);
+	 	return hashArray[hashIndex] -> value;
 	 }
 	 else{
 	 	printf("Object not found\n");
