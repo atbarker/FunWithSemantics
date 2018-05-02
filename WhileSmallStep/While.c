@@ -142,7 +142,7 @@ ast * assignExpression(char operator, char *variable, ast* expression){
 
 
 // This function runs through the AST and evaluates each level of expression parent, child nodes recursively
-int eval(ast *a, hashObject *hashArray){
+int eval(ast *a, hashObject **hashArray){
     int left;
     int right;
     int cond;
@@ -227,7 +227,7 @@ int eval(ast *a, hashObject *hashArray){
     }else if(a->typeExp == assign_exp){
         //enters into the state
 	left = eval(a->operation.assignCommand.expression, hashArray);
-	insert(a->operation.assignCommand.variable, left);
+	insert(a->operation.assignCommand.variable, left, hashArray);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
 		left = eval(a->operation.compCommand.left, hashArray);
@@ -255,7 +255,7 @@ int eval(ast *a, hashObject *hashArray){
              }
        }
     }else if(a->typeExp == var_exp){
-	result = fetch(a->operation.variableExp);   
+	result = fetch(a->operation.variableExp, hashArray);   
     }else{
         //error state, something went wrong
     }
@@ -278,7 +278,7 @@ int hashKey(char *key){
 
 //Inserts the hash object(variable expression) into the array
 
-void insert(char *key, int value) {
+void insert(char *key, int value, hashObject **hashArray) {
 
 	int hashIndex = hashKey(key);
 	hashObject *store;
@@ -295,7 +295,7 @@ void insert(char *key, int value) {
 	}
 }
 
-int fetch(char *key){
+int fetch(char *key, hashObject **hashArray){
 	 int hashIndex = hashKey(key);
 	 hashObject *store;
 	 if(hashArray[hashIndex] != NULL){

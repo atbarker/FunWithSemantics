@@ -76,7 +76,7 @@ typedef struct hashObj{
 	int value;
 }hashObject;
 
-hashObject *hashArray[500];
+//hashObject *hashArray[500];
 
 //create an AST node that holds an integer expression
 ast * intExpression(int number);
@@ -100,11 +100,11 @@ ast * whileExpression(char operator, ast* condition, ast* body);
 ast * negExpression(char operator, ast* c1);
 
 //evaluation, recursive, will evaluate an AST and return an integer
-int eval(ast *a, hashObject *hashArray);
+int eval(ast *a, hashObject **hashArray);
 
 int hashKey(char *key);
 
-void insert(char *key, int value);
+void insert(char *key, int value, hashObject **hashArray);
 
-int fetch(char *key);
+int fetch(char *key, hashObject **hashArray);
 #endif
