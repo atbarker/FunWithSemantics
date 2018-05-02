@@ -142,7 +142,7 @@ ast * assignExpression(char operator, char *variable, ast* expression){
 
 
 // This function runs through the AST and evaluates each level of expression parent, child nodes recursively
-int eval(ast *a){
+int eval(ast *a, hashObject *hashArray){
     int left;
     int right;
     int cond;
@@ -151,8 +151,8 @@ int eval(ast *a){
     	result = a->operation.integerExp;
     }
     else if(a->typeExp == arith_exp){
-        left = eval(a->operation.arithExp.left);
-		right = eval(a->operation.arithExp.right);
+        left = eval(a->operation.arithExp.left, hashArray);
+		right = eval(a->operation.arithExp.right, hashArray);
 		char op = a->operation.arithExp.operator;
 		if(op == '+'){
             result = left + right;
@@ -174,8 +174,8 @@ int eval(ast *a){
 		}
     }
     else if(a->typeExp == bool_exp){
-    	left = eval(a->operation.boolean.left);
-	right = eval(a->operation.boolean.right);
+    	left = eval(a->operation.boolean.left, hashArray);
+	right = eval(a->operation.boolean.right, hashArray);
         char op = a->operation.boolean.operator;
 	if(op == '='){
             if(left == right){
@@ -217,7 +217,7 @@ int eval(ast *a){
     }
     else if(a->typeExp == neg_exp){
         //negates a boolean
-	left = eval(a->operation.negExp.child);
+	left = eval(a->operation.negExp.child, hashArray);
         if(left == 0){
             result = 1;
 	}
@@ -226,30 +226,30 @@ int eval(ast *a){
 	}	    
     }else if(a->typeExp == assign_exp){
         //enters into the state
-	left = eval(a->operation.assignCommand.expression);
+	left = eval(a->operation.assignCommand.expression, hashArray);
 	insert(a->operation.assignCommand.variable, left);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
-		left = eval(a->operation.compCommand.left);
-		right = eval(a->operation.compCommand.right);
+		left = eval(a->operation.compCommand.left, hashArray);
+		right = eval(a->operation.compCommand.right, hashArray);
     }else if(a->typeExp == if_exp){
         //evaluates an if
-		cond = eval(a->operation.ifCommand.condition);
+		cond = eval(a->operation.ifCommand.condition, hashArray);
 		if(cond == 1){
-            result = eval(a->operation.ifCommand.body1);
+            result = eval(a->operation.ifCommand.body1, hashArray);
 		}
 		else{
-            result = eval(a->operation.ifCommand.body2);
+            result = eval(a->operation.ifCommand.body2, hashArray);
 		}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
-       int cond = eval(a->operation.whileCommand.condition);
+       int cond = eval(a->operation.whileCommand.condition, hashArray);
        printf("condition %d\n", cond);
        if(cond == 1){
 	     printf("Executing loop\n");
     	     while(1){
-		 eval(a->operation.whileCommand.body);
-		 cond = eval(a->operation.whileCommand.condition);
+		 eval(a->operation.whileCommand.body, hashArray);
+		 cond = eval(a->operation.whileCommand.condition, hashArray);
 		 if(cond != 1){break;}
 		 printf("continuing\n");
              }

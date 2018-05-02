@@ -100,7 +100,7 @@ ast * whileExpression(char operator, ast* condition, ast* body);
 ast * negExpression(char operator, ast* c1);
 
 //evaluation, recursive, will evaluate an AST and return an integer
-int eval(ast *a);
+int eval(ast *a, hashObject *hashArray);
 
 int hashKey(char *key);
 

@@ -10,7 +10,7 @@ int main(){
     ast *right = intExpression(4);
     ast *divtest = intExpression(20);
     ast *boolTest = intExpression(1); 
-
+    /*
     // Tests '+' 
     ast * one = arithExpression('+', left, right);
     int test =eval(one); 
@@ -89,7 +89,7 @@ int main(){
     ast *thirteen = whileExpression(' ', thirteen3, thirteen6);
     int woop = eval(thirteen);
     printf("While loop working\n");
-
+    */
     
     
     //testing the hash table for storing variables	
