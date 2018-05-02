@@ -213,7 +213,7 @@ int eval(ast *a, hashObject **hashArray){
     else if(a->typeExp == skip_exp){
         //executes a skip
         //eval(a->operation.skipCommand.child);
-
+        //print out the remaining AST
     }
     else if(a->typeExp == neg_exp){
         //negates a boolean
@@ -230,17 +230,17 @@ int eval(ast *a, hashObject **hashArray){
 	insert(a->operation.assignCommand.variable, left, hashArray);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
-		left = eval(a->operation.compCommand.left, hashArray);
-		right = eval(a->operation.compCommand.right, hashArray);
+	//traverse the AST
+	left = eval(a->operation.compCommand.left, hashArray);
+	right = eval(a->operation.compCommand.right, hashArray);
     }else if(a->typeExp == if_exp){
         //evaluates an if
-		cond = eval(a->operation.ifCommand.condition, hashArray);
-		if(cond == 1){
+	cond = eval(a->operation.ifCommand.condition, hashArray);
+	if(cond == 1){
             result = eval(a->operation.ifCommand.body1, hashArray);
-		}
-		else{
+	}else{
             result = eval(a->operation.ifCommand.body2, hashArray);
-		}
+	}
     }else if(a->typeExp == while_exp){
         //evaluates a loop
        int cond = eval(a->operation.whileCommand.condition, hashArray);
@@ -305,6 +305,70 @@ int fetch(char *key, hashObject **hashArray){
 	 	printf("Object not found\n");
 	 }
 	 return 0;
+}
+
+int dumpHash(hashObject **hashArray){
+    return 0;
+}
+
+int printAST(ast *a){
+    //if a composition print the left and then right
+    if(a->typeExp == comp_exp){
+        printAST(a->operation.compCommand.left);
+	printf(";");
+        printAST(a->operation.compCommand.right);
+    }
+    //if a variable assignment
+    else if(a->typeExp == assign_exp){
+        printf(a->operation.assignCommand.variable);
+	printf(":=");
+	printAST(a->operation.assignCommand.expression);
+    }
+    //if a variable statement
+    else if(a->typeExp == var_exp){
+        printf(a->operation.variableExp);
+    }
+    //if a skip
+    else if(a->typeExp == skip_exp){
+        printf("skip");
+    }
+    //if an if
+    else if(a->typeExp == if_exp){
+        printf("if(");
+        printAST(a->operation.ifCommand.condition);
+        printf(") ");
+        printAST(a->operation.ifCommand.body1);
+        printf(" else ");
+        printAST(a->operation.ifCommand.body2);	
+    }
+    //if a while
+    else if(a->typeExp == while_exp){
+        printf("while(");
+	printAST(a->operation.whileCommand.condition);
+	printf(") ");
+	printAST(a->operation.whileCommand.body);
+    }
+    else if(a->typeExp == integer_exp){
+        printf("%d", a->operation.integerExp);
+    }
+    else if(a->typeExp == arith_exp){
+        printAST(a->operation.arithExp.left);
+        printf("%c", a->operation.arithExp.operator);
+        printAST(a->operation.arithExp.right);	
+    }
+    else if(a->typeExp == bool_exp){
+        printAST(a->operation.boolean.left);
+	printf("%c", a->operation.boolean.operator);
+	printAST(a->operation.boolean.right);
+    }
+    else if(a->typeExp == neg_exp){
+        printf("~");
+	printAST(a->operation.negExp.child);
+    }
+    else{
+
+    }
+    return 0;
 }
 
 
