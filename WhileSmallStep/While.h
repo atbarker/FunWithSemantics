@@ -32,42 +32,50 @@ typedef struct exp{
 	    struct{
 		char operator;
 		struct exp* child;
+		struct exp* parent;
 	    } negExp;
 	    struct { 
 	        char operator;
 	        struct exp* left;
 	        struct exp* right;
+		struct exp* parent;
 	    } arithExp;
 	    //in the boolean expression if the right child is null and the operator is '~' then we can assume it is a logical NOT
 	    struct {
 	    	char operator;
 	    	struct exp* left;
 	    	struct exp* right;
+		struct exp* parent;
 	    } boolean;
 	    struct {
 	    	char operator;
 	    	struct exp* child;
+		struct exp* parent;
 	    } skipCommand;
 	    struct {
                 char operator;
 		char *variable;
 		struct exp* expression;
+		struct exp* parent;
             } assignCommand;
 	    struct {
 	        char operator;
 		struct exp* left;
 		struct exp* right;
+		struct exp* parent;
 	    } compCommand;
 	    struct {
 		char operator;
 		struct exp* condition;
 		struct exp* body1;
 		struct exp* body2;
+		struct exp* parent;
 	    } ifCommand;
 	    struct {
 		char operator;
 		struct exp* condition;
 		struct exp* body;
+		struct exp* parent;
 	    } whileCommand;
     }operation;    
 }ast;
@@ -96,6 +104,8 @@ ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2);
 ast * whileExpression(char operator, ast* condition, ast* body);
 // evaluates the negation of a node
 ast * negExpression(char operator, ast* c1);
+
+void printASTTop(ast *a);
 
 //evaluation, recursive, will evaluate an AST and return an integer
 int eval(ast *a, hashObject **hashArray);

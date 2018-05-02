@@ -18,71 +18,73 @@ int main(){
     // Tests '+' 
     ast * one = arithExpression('+', left, right);
     int test =eval(one, hashArray); 
-    printf("The result of test for + should be 9, actual:%d\n", test);
+    //printf("The result of test for + should be 9, actual:%d\n", test);
 
     //Tests '*'
     ast * two = arithExpression('*', left, right);
     test = eval(two, hashArray);
-    printf("The result of test for * should be 20, actual:%d\n", test);
+    //printf("The result of test for * should be 20, actual:%d\n", test);
 
     //Tests '/'
     ast * three = arithExpression('/', divtest, right);
     test = eval(three, hashArray);
-    printf("The result of test for / should be 5, actual:%d\n", test);
+    //printf("The result of test for / should be 5, actual:%d\n", test);
 
 
     //Tests '~'
     ast * four = negExpression('~', boolTest);
     int threeTest = eval(four, hashArray);
-    printf("The result of test for ~ should be 0, actual:%d\n", threeTest); 
+    //printf("The result of test for ~ should be 0, actual:%d\n", threeTest); 
 
     ast *five = booleanExpression('=', left, right);
     int fourTest = eval(five, hashArray);
-    printf("The result of test for = should be 0, actual:%d\n", fourTest);
+    //printf("The result of test for = should be 0, actual:%d\n", fourTest);
 
     ast *six = booleanExpression('<', left, right);
     int sixTest = eval(six, hashArray);
-    printf("The result of test for < should be 0, actual:%d\n", sixTest);
+    //printf("The result of test for < should be 0, actual:%d\n", sixTest);
 
     ast *seven = booleanExpression('|', left, right);
     int sevenTest = eval(seven, hashArray);
-    printf("The result of test for | should be 1, actual:%d\n", sevenTest);
+    //printf("The result of test for | should be 1, actual:%d\n", sevenTest);
 
     ast *eight = booleanExpression('&', left, right);
     int eightTest = eval(eight, hashArray);
-    printf("The result of test for & should be 1, actual:%d\n", eightTest);
+    //printf("The result of test for & should be 1, actual:%d\n", eightTest);
 
     //variable storage/assignment/update
     ast *nine = assignExpression('=', "a", right);
     int nineTest = eval(nine, hashArray);
-    printf("Variable a assigned to value 4\n");
+    //printf("Variable a assigned to value 4\n");
 
     //variable retrieval
     ast *ten = variableExp("a");
     int tenTest = eval(ten, hashArray);
-    printf("Retrieved value should be 4, actual:%d\n", tenTest);
+    //printf("Retrieved value should be 4, actual:%d\n", tenTest);
 
     //skip command
     ast *eleven = skipExpression('@', right);
     int elevenTest = eval(eleven, hashArray);
-    printf("Skip successful\n");
+    //printf("Skip successful\n");
 
     //composition expression
     ast *nine1 = assignExpression('=', "r", right);
     ast *ten1 = variableExp("r");
-    ast *twelve = compExpression(';', nine1, ten1);
+    ast *fourd = arithExpression('+', ten1, left);
+    ast *fourc = assignExpression('=', "r", fourd);
+    ast *twelve = compExpression(';', nine1, fourc);
     int twelveTest = eval(twelve, hashArray);
-    printf("Composition successful\n");
+    //printf("Composition successful\n");
 
     //if true
     ast *twelve1 = ifExpression(' ', eight, twelve, ten);
     int twelve1Test = eval(twelve1, hashArray);
-    printf("if true successful\n");
+    //printf("if true successful\n");
 
     //if false
     ast *twelve2 = ifExpression(' ', six, twelve, ten);
     int twelve2Test = eval(twelve2, hashArray);
-    printf("if false successful\n");
+    //printf("if false successful\n");
 
     ast *thirteen1 = variableExp("a");
     ast *thirteen2 = intExpression(7);
@@ -92,7 +94,7 @@ int main(){
     ast *thirteen6 = assignExpression('=', "a", thirteen5);
     ast *thirteen = whileExpression(' ', thirteen3, thirteen6);
     int woop = eval(thirteen, hashArray);
-    printf("While loop working\n");
+    //printf("While loop working\n");
     
     
     

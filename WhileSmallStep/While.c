@@ -147,10 +147,14 @@ int eval(ast *a, hashObject **hashArray){
     int right;
     int cond;
     int result = 0;
+    //printf("<");
+    //printAST(a);
+    //printf("> ->\n");
     if(a->typeExp == integer_exp){
     	result = a->operation.integerExp;
     }
     else if(a->typeExp == arith_exp){
+	printASTTop(a);
         left = eval(a->operation.arithExp.left, hashArray);
 		right = eval(a->operation.arithExp.right, hashArray);
 		char op = a->operation.arithExp.operator;
@@ -174,6 +178,7 @@ int eval(ast *a, hashObject **hashArray){
 		}
     }
     else if(a->typeExp == bool_exp){
+	printASTTop(a);
     	left = eval(a->operation.boolean.left, hashArray);
 	right = eval(a->operation.boolean.right, hashArray);
         char op = a->operation.boolean.operator;
@@ -214,9 +219,11 @@ int eval(ast *a, hashObject **hashArray){
         //executes a skip
         //eval(a->operation.skipCommand.child);
         //print out the remaining AST
+	printASTTop(a);
     }
     else if(a->typeExp == neg_exp){
         //negates a boolean
+	printASTTop(a);
 	left = eval(a->operation.negExp.child, hashArray);
         if(left == 0){
             result = 1;
@@ -225,15 +232,18 @@ int eval(ast *a, hashObject **hashArray){
 	    result = 0;
 	}	    
     }else if(a->typeExp == assign_exp){
+	printASTTop(a);
         //enters into the state
 	left = eval(a->operation.assignCommand.expression, hashArray);
 	insert(a->operation.assignCommand.variable, left, hashArray);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
 	//traverse the AST
+	printASTTop(a);
 	left = eval(a->operation.compCommand.left, hashArray);
 	right = eval(a->operation.compCommand.right, hashArray);
     }else if(a->typeExp == if_exp){
+	printASTTop(a);
         //evaluates an if
 	cond = eval(a->operation.ifCommand.condition, hashArray);
 	if(cond == 1){
@@ -242,16 +252,17 @@ int eval(ast *a, hashObject **hashArray){
             result = eval(a->operation.ifCommand.body2, hashArray);
 	}
     }else if(a->typeExp == while_exp){
+	printASTTop(a);
         //evaluates a loop
        int cond = eval(a->operation.whileCommand.condition, hashArray);
-       printf("condition %d\n", cond);
+       //printf("condition %d\n", cond);
        if(cond == 1){
-	     printf("Executing loop\n");
+	     //printf("Executing loop\n");
     	     while(1){
 		 eval(a->operation.whileCommand.body, hashArray);
 		 cond = eval(a->operation.whileCommand.condition, hashArray);
 		 if(cond != 1){break;}
-		 printf("continuing\n");
+		 //printf("continuing\n");
              }
        }
     }else if(a->typeExp == var_exp){
@@ -369,6 +380,12 @@ int printAST(ast *a){
 
     }
     return 0;
+}
+
+void printASTTop(ast *a){
+    printf("< ");
+    printAST(a);
+    printf(" >  ->\n");
 }
 
 
