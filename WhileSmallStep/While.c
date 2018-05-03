@@ -50,8 +50,8 @@ ast * arithExpression(char operator, ast* c1, ast* c2){
 		printf("AHHHH Not Good\n");
 		return NULL;
 	}
-	c1->operation.arithExp.parent = a;
-	c2->operation.arithExp.parent = a;
+	c1->parent = a;
+	c2->parent = a;
 	return a;
 }
 
@@ -84,8 +84,8 @@ ast * booleanExpression(char operator, ast *c1, ast *c2){
 	else{
 		printf("Something is horribly wrong at boolean\n");
 	}
-	c1->operation.boolean.parent = a;
-	c2->operation.boolean.parent = a;
+	c1->parent = a;
+	c2->parent = a;
 	return a;
 }
 
@@ -95,7 +95,7 @@ ast * negExpression(char operator, ast* c1){
 	a->typeExp = neg_exp; 
 	a->operation.negExp.operator = '~';
 	a->operation.negExp.child = c1;
-	c1->operation.negExp.parent = a;
+	c1->parent = a;
 	return a;
 }
 
@@ -105,8 +105,8 @@ ast * compExpression(char operator, ast *c1, ast *c2){
     a->typeExp = comp_exp;
     a->operation.compCommand.left = c1;
     a->operation.compCommand.right = c2;
-    c1->operation.compCommand.parent = a;
-    c2->operation.compCommand.parent = a;
+    c1->parent = a;
+    c2->parent = a;
     return a;
 }
 
@@ -117,9 +117,9 @@ ast * ifExpression(char operator, ast* condition, ast* c1, ast* c2){
     a->operation.ifCommand.condition = condition;
     a->operation.ifCommand.body1 = c1;
     a->operation.ifCommand.body2 = c2;
-    condition->operation.ifCommand.parent = a;
-    c1->operation.ifCommand.parent = a;
-    c2->operation.ifCommand.parent = a;
+    condition->parent = a;
+    c1->parent = a;
+    c2->parent = a;
     return a;
 }
 
@@ -129,8 +129,8 @@ ast * whileExpression(char operator, ast* condition, ast* body){
     a->typeExp = while_exp;
     a->operation.whileCommand.condition = condition;
     a->operation.whileCommand.body = body;
-    condition->operation.whileCommand.parent = a;
-    body->operation.whileCommand.parent = a;
+    condition->parent = a;
+    body->parent = a;
     return a;
 }
 
@@ -139,7 +139,7 @@ ast * skipExpression(char operator, ast* c1){
     ast *a = malloc(sizeof(ast));
     a->typeExp = skip_exp;
     a->operation.skipCommand.child = c1;
-    c1->operation.skipCommand.parent = a;
+    //c1->parent = a;
     return a;
 }
 
@@ -149,7 +149,7 @@ ast * assignExpression(char operator, char *variable, ast* expression){
     a->typeExp = assign_exp;
     a->operation.assignCommand.variable = variable;
     a->operation.assignCommand.expression = expression;
-    expression->operation.assignCommand.parent = a;
+    expression->parent = a;
     return a;
 }	
      
@@ -161,14 +161,15 @@ int eval(ast *a, hashObject **hashArray){
     int right;
     int cond;
     int result = 0;
-    //printf("<");
-    //printAST(a);
-    //printf("> ->\n");
+    ast *trailing = skipExpression(' ', NULL);
+    //if(a->parent == NULL && a->typeExp != skip_exp){
+       //printASTTop(a);
+    //}
     if(a->typeExp == integer_exp){
     	result = a->operation.integerExp;
     }
     else if(a->typeExp == arith_exp){
-	printASTTop(a);
+	//printASTTop(a);
         left = eval(a->operation.arithExp.left, hashArray);
 		right = eval(a->operation.arithExp.right, hashArray);
 		char op = a->operation.arithExp.operator;
@@ -192,7 +193,7 @@ int eval(ast *a, hashObject **hashArray){
 		}
     }
     else if(a->typeExp == bool_exp){
-	printASTTop(a);
+	//printASTTop(a);
     	left = eval(a->operation.boolean.left, hashArray);
 	right = eval(a->operation.boolean.right, hashArray);
         char op = a->operation.boolean.operator;
@@ -234,10 +235,11 @@ int eval(ast *a, hashObject **hashArray){
         //eval(a->operation.skipCommand.child);
         //print out the remaining AST
 	printASTTop(a);
+	return result;
     }
     else if(a->typeExp == neg_exp){
         //negates a boolean
-	printASTTop(a);
+	//printASTTop(a);
 	left = eval(a->operation.negExp.child, hashArray);
         if(left == 0){
             result = 1;
@@ -253,12 +255,16 @@ int eval(ast *a, hashObject **hashArray){
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
 	//traverse the AST
-	printASTTop(a);
+	next = a->operation.compCommand.right;
+	//printASTTop(a->operation.compCommand.left);
 	left = eval(a->operation.compCommand.left, hashArray);
+	eval(trailing, hashArray);
+	next = NULL;
 	right = eval(a->operation.compCommand.right, hashArray);
+	eval(trailing, hashArray);
     }else if(a->typeExp == if_exp){
+    	//evaluates an if
 	printASTTop(a);
-        //evaluates an if
 	cond = eval(a->operation.ifCommand.condition, hashArray);
 	if(cond == 1){
             result = eval(a->operation.ifCommand.body1, hashArray);
@@ -382,13 +388,9 @@ int printAST(ast *a){
         printAST(a->operation.arithExp.right);	
     }
     else if(a->typeExp == bool_exp){
-	//if(a->operation.boolean.parent){
-	//if(a->operation.boolean.parent->typeExp == if_exp){
             printAST(a->operation.boolean.left);
 	    printf("%c", a->operation.boolean.operator);
 	    printAST(a->operation.boolean.right);
-	//}
-	//}
     }
     else if(a->typeExp == neg_exp){
         printf("~");
@@ -403,6 +405,10 @@ int printAST(ast *a){
 void printASTTop(ast *a){
     printf("< ");
     printAST(a);
+    if(next != NULL){
+        printf(";");
+        printAST(next);
+    }
     printf(" >  ->\n");
 }
 

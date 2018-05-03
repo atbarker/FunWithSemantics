@@ -25,6 +25,7 @@ enum commandType{
 // Using a union, this creates a struct , for the assessment of mult, add, and exponentiation. Called AST
 typedef struct exp{
     enum type typeExp; 
+    struct exp* parent;
     union {
 	    int integerExp;
 	    char *variableExp;
@@ -32,53 +33,47 @@ typedef struct exp{
 	    struct{
 		char operator;
 		struct exp* child;
-		struct exp* parent;
 	    } negExp;
 	    struct { 
 	        char operator;
 	        struct exp* left;
 	        struct exp* right;
-		struct exp* parent;
 	    } arithExp;
 	    //in the boolean expression if the right child is null and the operator is '~' then we can assume it is a logical NOT
 	    struct {
 	    	char operator;
 	    	struct exp* left;
 	    	struct exp* right;
-		struct exp* parent;
 	    } boolean;
 	    struct {
 	    	char operator;
 	    	struct exp* child;
-		struct exp* parent;
 	    } skipCommand;
 	    struct {
                 char operator;
 		char *variable;
 		struct exp* expression;
-		struct exp* parent;
             } assignCommand;
 	    struct {
 	        char operator;
 		struct exp* left;
 		struct exp* right;
-		struct exp* parent;
 	    } compCommand;
 	    struct {
 		char operator;
 		struct exp* condition;
 		struct exp* body1;
 		struct exp* body2;
-		struct exp* parent;
 	    } ifCommand;
 	    struct {
 		char operator;
 		struct exp* condition;
 		struct exp* body;
-		struct exp* parent;
 	    } whileCommand;
     }operation;    
 }ast;
+
+ast *next;
 
 typedef struct hashObj{
 	int value;
