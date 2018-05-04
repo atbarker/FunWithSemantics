@@ -339,6 +339,11 @@ int fetch(char *key, hashObject **hashArray){
 }
 
 int dumpHash(hashObject **hashArray){
+	for (int i = 0; i < 500; i++){
+		if (hashArray[i] != NULL){
+			printf("{key: %d , value %d}\n", i ,hashArray[i] -> value);	
+		}
+	} 
     return 0;
 }
 
