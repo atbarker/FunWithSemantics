@@ -286,10 +286,10 @@ int eval(ast *a, hashObject **hashArray){
         int cond = eval(a->operation.whileCommand.condition, hashArray);
         //printf("condition %d\n", cond);
         if(cond == 1){
-    	     while(1){
+    	     while(cond == 1){
 		 eval(a->operation.whileCommand.body, hashArray);
 		 cond = eval(a->operation.whileCommand.condition, hashArray);
-		 if(cond != 1){break;}
+		 printASTTop(a, hashArray);
              }
         }
     }else if(a->typeExp == var_exp){
@@ -347,7 +347,7 @@ int fetch(char *key, hashObject **hashArray){
 int dumpHash(hashObject **hashArray){
 	for (int i = 0; i < 500; i++){
 		if (hashArray[i] != NULL){
-			printf(" %s:=%d ", hashArray[i]->name ,hashArray[i] -> value);	
+			printf(" %s: %d ", hashArray[i]->name ,hashArray[i] -> value);	
 		}
 	} 
     return 0;
