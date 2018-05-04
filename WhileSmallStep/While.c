@@ -1,6 +1,7 @@
 #include "While.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //This assignment was created by Austen Barker (1.5 hours) and Staunton Sample (1.5 hours)
 
@@ -162,14 +163,11 @@ int eval(ast *a, hashObject **hashArray){
     int cond;
     int result = 0;
     ast *trailing = skipExpression(' ', NULL);
-    //if(a->parent == NULL && a->typeExp != skip_exp){
-       //printASTTop(a);
-    //}
+   
     if(a->typeExp == integer_exp){
     	result = a->operation.integerExp;
     }
     else if(a->typeExp == arith_exp){
-	//printASTTop(a);
         left = eval(a->operation.arithExp.left, hashArray);
 		right = eval(a->operation.arithExp.right, hashArray);
 		char op = a->operation.arithExp.operator;
@@ -193,7 +191,6 @@ int eval(ast *a, hashObject **hashArray){
 		}
     }
     else if(a->typeExp == bool_exp){
-	//printASTTop(a);
     	left = eval(a->operation.boolean.left, hashArray);
 	right = eval(a->operation.boolean.right, hashArray);
         char op = a->operation.boolean.operator;
@@ -234,12 +231,11 @@ int eval(ast *a, hashObject **hashArray){
         //executes a skip
         //eval(a->operation.skipCommand.child);
         //print out the remaining AST
-	printASTTop(a);
+	printASTTop(a, hashArray);
 	return result;
     }
     else if(a->typeExp == neg_exp){
-        //negates a boolean
-	//printASTTop(a);
+        //negates a boolean	
 	left = eval(a->operation.negExp.child, hashArray);
         if(left == 0){
             result = 1;
@@ -248,23 +244,36 @@ int eval(ast *a, hashObject **hashArray){
 	    result = 0;
 	}	    
     }else if(a->typeExp == assign_exp){
-	printASTTop(a);
+	printASTTop(a, hashArray);
         //enters into the state
 	left = eval(a->operation.assignCommand.expression, hashArray);
 	insert(a->operation.assignCommand.variable, left, hashArray);
     }else if(a->typeExp == comp_exp){
         //evaluates a composition
 	//traverse the AST
+	
+	//sets a pointer for the purposes of the print statement, so we can print out the whole program
+	//even if we are in a different branch of the AST
 	next = a->operation.compCommand.right;
-	//printASTTop(a->operation.compCommand.left);
+	
 	left = eval(a->operation.compCommand.left, hashArray);
+
+	//after a thing executes we have a skip operation and print out the state
 	eval(trailing, hashArray);
+
+	//this is just for handling printing out the rest of the program like the example
+	//as it is a different branch of the AST
 	next = NULL;
+
 	right = eval(a->operation.compCommand.right, hashArray);
-	eval(trailing, hashArray);
+
+	//This will print out the last skip when we get to the end of the program, ie, no more 
+	if(a->operation.compCommand.right->typeExp != comp_exp){
+            eval(trailing, hashArray);  
+	}
     }else if(a->typeExp == if_exp){
     	//evaluates an if
-	printASTTop(a);
+	printASTTop(a, hashArray);
 	cond = eval(a->operation.ifCommand.condition, hashArray);
 	if(cond == 1){
             result = eval(a->operation.ifCommand.body1, hashArray);
@@ -272,19 +281,17 @@ int eval(ast *a, hashObject **hashArray){
             result = eval(a->operation.ifCommand.body2, hashArray);
 	}
     }else if(a->typeExp == while_exp){
-	printASTTop(a);
+	printASTTop(a, hashArray);
         //evaluates a loop
-       int cond = eval(a->operation.whileCommand.condition, hashArray);
-       //printf("condition %d\n", cond);
-       if(cond == 1){
-	     //printf("Executing loop\n");
+        int cond = eval(a->operation.whileCommand.condition, hashArray);
+        //printf("condition %d\n", cond);
+        if(cond == 1){
     	     while(1){
 		 eval(a->operation.whileCommand.body, hashArray);
 		 cond = eval(a->operation.whileCommand.condition, hashArray);
 		 if(cond != 1){break;}
-		 //printf("continuing\n");
              }
-       }
+        }
     }else if(a->typeExp == var_exp){
 	result = fetch(a->operation.variableExp, hashArray);   
     }else{
@@ -292,9 +299,6 @@ int eval(ast *a, hashObject **hashArray){
     }
     return result;
 }
-
-//Array to store hashtable for variables
-
 
 //Hashing function for variable assignment.
 //Hash function is modified djb2 found http://www.cs.dartmouth.edu/~campbell/cs50/hash.c
@@ -314,7 +318,8 @@ void insert(char *key, int value, hashObject **hashArray) {
 	int hashIndex = hashKey(key);
 	hashObject *store;
         if(hashArray[hashIndex] == NULL){
-    	    store = calloc(1, sizeof(hashObject)); 
+    	    store = calloc(1, sizeof(hashObject));
+	    strcpy(store->name, (const char*)key); 
     	    store->value = value;
     	    hashArray[hashIndex] = store;
     	    //printf("New object stored at index: %d\n",hashIndex);
@@ -338,15 +343,17 @@ int fetch(char *key, hashObject **hashArray){
 	 return 0;
 }
 
+//dumps the hash table so we can see the state
 int dumpHash(hashObject **hashArray){
 	for (int i = 0; i < 500; i++){
 		if (hashArray[i] != NULL){
-			printf("{key: %d , value %d}\n", i ,hashArray[i] -> value);	
+			printf(" %s:=%d ", hashArray[i]->name ,hashArray[i] -> value);	
 		}
 	} 
     return 0;
 }
 
+//recursively prints our AST into a human readable format at each step of execution
 int printAST(ast *a){
     //if a composition print the left and then right
     if(a->typeExp == comp_exp){
@@ -407,14 +414,18 @@ int printAST(ast *a){
     return 0;
 }
 
-void printASTTop(ast *a){
+//Main print function, prints out both what is being executed and the rest of the program
+//calls the recursive function
+void printASTTop(ast *a, hashObject **hashArray){
     printf("< ");
     printAST(a);
     if(next != NULL){
         printf(";");
         printAST(next);
     }
-    printf(" >  ->\n");
+    printf(", {");
+    dumpHash(hashArray);
+    printf("} >  ->\n");
 }
 
 

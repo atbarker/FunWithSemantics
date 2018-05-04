@@ -76,6 +76,7 @@ typedef struct exp{
 ast *next;
 
 typedef struct hashObj{
+	char name[20];
 	int value;
 }hashObject;
 
@@ -100,7 +101,8 @@ ast * whileExpression(char operator, ast* condition, ast* body);
 // evaluates the negation of a node
 ast * negExpression(char operator, ast* c1);
 
-void printASTTop(ast *a);
+//This will dump the current execution state and the contents of our hash table
+void printASTTop(ast *a, hashObject **hashArray);
 
 //evaluation, recursive, will evaluate an AST and return an integer
 int eval(ast *a, hashObject **hashArray);
