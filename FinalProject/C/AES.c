@@ -1,3 +1,5 @@
+
+
 //S-boxes obtained from kokke's tiny AES repository
 static const uint8_t sbox[256] = {
   //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
@@ -35,3 +37,259 @@ static const uint8_t rsbox[256] = {
   0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef,
   0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61,
   0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
+
+
+//our little global variable
+uint8_t array[4][4];
+
+uint8_t get_sbox(uint8_t in){
+    return sbox[in];
+}
+
+uint8_t get_rsbox(uint8_t in){
+    return rsbox[in];
+}
+
+//the key is either 4, 6, or 8 32 bit words
+//rounds are 10, 12, or 14
+static void KeyExpansion(uint8_t *rkey, uint8_t *Key, int rounds, int key)
+{
+  uint32_t i, j, k;
+  uint8_t temp[4]; // Used for the column/row operations
+
+  // The first round key is the key itself.
+  for(i = 0; i < key; ++i)
+  {
+    rkey[(i * 4) + 0] = Key[(i * 4) + 0];
+    rkey[(i * 4) + 1] = Key[(i * 4) + 1];
+    rkey[(i * 4) + 2] = Key[(i * 4) + 2];
+    rkey[(i * 4) + 3] = Key[(i * 4) + 3];
+  }
+
+
+  // All other round keys are found from the previous round keys.
+  for(; (i < (4 * (rounds + 1))); ++i)
+  {
+    for(j = 0; j < 4; ++j)
+    {
+      temp[j]=rkey[(i-1) * 4 + j];
+    }
+    if (i % key == 0)
+    {
+      // This function rotates the 4 bytes in a word to the left once.
+      // [a0,a1,a2,a3] becomes [a1,a2,a3,a0]
+
+
+      // Function RotWord()
+      {
+        k = temp[0];
+        temp[0] = temp[1];
+        temp[1] = temp[2];
+        temp[2] = temp[3];
+        temp[3] = k;
+      }
+
+
+      // SubWord() is a function that takes a four-byte input word and 
+      // applies the S-box to each of the four bytes to produce an output word.
+
+
+      // Function Subword()
+      {
+        temp[0] = get_sbox(temp[0]);
+        temp[1] = get_sbox(temp[1]);
+        temp[2] = get_sbox(temp[2]);
+        temp[3] = get_sbox(temp[3]);
+      }
+
+
+      temp[0] =  temp[0] ^ Rcon[i/Nk];
+    }
+    else if (Nk > 6 && i % Nk == 4)
+    {
+      // Function Subword()
+      {
+        temp[0] = get_sbox(temp[0]);
+        temp[1] = get_sbox(temp[1]);
+        temp[2] = get_sbox(temp[2]);
+        temp[3] = get_sbox(temp[3]);
+      }
+    }
+    rkey[i * 4 + 0] = rkey[(i - key) * 4 + 0] ^ temp[0];
+    rkey[i * 4 + 1] = rkey[(i - key) * 4 + 1] ^ temp[1];
+    rkey[i * 4 + 2] = rkey[(i - key) * 4 + 2] ^ temp[2];
+    rkey[i * 4 + 3] = rkey[(i - key) * 4 + 3] ^ temp[3];
+  }
+}
+
+uint8_t xtime(uint8_t x)
+{
+  return ((x<<1) ^ (((x>>7) & 1) * 0x1b));
+}
+
+uint8_t Multiply(uint8_t x, uint8_t y)
+{
+  int result =  (((y & 1) * x) ^
+       ((y>>1 & 1) * xtime(x)) ^
+       ((y>>2 & 1) * xtime(xtime(x))) ^
+       ((y>>3 & 1) * xtime(xtime(xtime(x)))) ^
+       ((y>>4 & 1) * xtime(xtime(xtime(xtime(x)))))); /* this last call to xtime() can be omitted */
+  return result;
+}
+
+void add_round_key(uint8_t round, uint8_t *rkey){
+  uint8_t i, j;
+  for(i = 0; i<4; i++){
+    for(j=0; j<4; i++){
+      (*state)[i][j] ^= rkey[round * 4 * 4 + i * 4 + j];
+    }
+  }
+}
+
+void substitute(){
+
+}
+
+void shift_rows(){
+  uint8_t temp;
+
+
+  // Rotate first row 1 columns to left  
+  temp           = (*state)[0][1];
+  (*state)[0][1] = (*state)[1][1];
+  (*state)[1][1] = (*state)[2][1];
+  (*state)[2][1] = (*state)[3][1];
+  (*state)[3][1] = temp;
+
+
+  // Rotate second row 2 columns to left  
+  temp           = (*state)[0][2];
+  (*state)[0][2] = (*state)[2][2];
+  (*state)[2][2] = temp;
+
+
+  temp       = (*state)[1][2];
+  (*state)[1][2] = (*state)[3][2];
+  (*state)[3][2] = temp;
+
+
+  // Rotate third row 3 columns to left
+  temp       = (*state)[0][3];
+  (*state)[0][3] = (*state)[3][3];
+  (*state)[3][3] = (*state)[2][3];
+  (*state)[2][3] = (*state)[1][3];
+  (*state)[1][3] = temp;
+
+}
+
+void mix_columns(){
+  uint8_t i;
+  uint8_t Tmp,Tm,t;
+  for(i = 0; i < 4; ++i)
+  {  
+    t   = (*state)[i][0];
+    Tmp = (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
+    Tm  = (*state)[i][0] ^ (*state)[i][1] ; Tm = xtime(Tm);  (*state)[i][0] ^= Tm ^ Tmp ;
+    Tm  = (*state)[i][1] ^ (*state)[i][2] ; Tm = xtime(Tm);  (*state)[i][1] ^= Tm ^ Tmp ;
+    Tm  = (*state)[i][2] ^ (*state)[i][3] ; Tm = xtime(Tm);  (*state)[i][2] ^= Tm ^ Tmp ;
+    Tm  = (*state)[i][3] ^ t ;        Tm = xtime(Tm);  (*state)[i][3] ^= Tm ^ Tmp ;
+  }
+}
+
+void invert_mix_columns(){
+  int i;
+  uint8_t a,b,c,d;
+  for(i=0;i<4;++i)
+  { 
+    a = (*state)[i][0];
+    b = (*state)[i][1];
+    c = (*state)[i][2];
+    d = (*state)[i][3];
+
+
+    (*state)[i][0] = Multiply(a, 0x0e) ^ Multiply(b, 0x0b) ^ Multiply(c, 0x0d) ^ Multiply(d, 0x09);
+    (*state)[i][1] = Multiply(a, 0x09) ^ Multiply(b, 0x0e) ^ Multiply(c, 0x0b) ^ Multiply(d, 0x0d);
+    (*state)[i][2] = Multiply(a, 0x0d) ^ Multiply(b, 0x09) ^ Multiply(c, 0x0e) ^ Multiply(d, 0x0b);
+    (*state)[i][3] = Multiply(a, 0x0b) ^ Multiply(b, 0x0d) ^ Multiply(c, 0x09) ^ Multiply(d, 0x0e);
+  }
+}
+}
+
+void invert_shift_rows(){
+  uint8_t temp;
+
+
+  // Rotate first row 1 columns to right  
+  temp=(*state)[3][1];
+  (*state)[3][1]=(*state)[2][1];
+  (*state)[2][1]=(*state)[1][1];
+  (*state)[1][1]=(*state)[0][1];
+  (*state)[0][1]=temp;
+
+
+  // Rotate second row 2 columns to right 
+  temp=(*state)[0][2];
+  (*state)[0][2]=(*state)[2][2];
+  (*state)[2][2]=temp;
+
+
+  temp=(*state)[1][2];
+  (*state)[1][2]=(*state)[3][2];
+  (*state)[3][2]=temp;
+
+
+  // Rotate third row 3 columns to right
+  temp=(*state)[0][3];
+  (*state)[0][3]=(*state)[1][3];
+  (*state)[1][3]=(*state)[2][3];
+  (*state)[2][3]=(*state)[3][3];
+  (*state)[3][3]=temp;
+}
+
+void invert_substitute(){
+  uint8_t i,j;
+  for(i=0;i<4;++i)
+  {
+    for(j=0;j<4;++j)
+    {
+      (*state)[j][i] = get_rsbox((*state)[j][i]);
+    }
+  }
+}
+
+void encrypt(){
+  uint8_t round = 0;
+  add_round_key(0); 
+  for(round = 1; round < Nr; ++round)
+  {
+    substitute();
+    shift_rows();
+    mix_columns();
+    add_round_key(round, rkey);
+  }
+  substitute();
+  shift_rows();
+  add_round_key(round, rkey);
+
+}
+
+void decrypt(){
+  uint8_t round=0;
+
+
+  // Add the First round key to the state before starting the rounds.
+  add_round_key(round); 
+  for(round=Nr-1;round>0;round--)
+  {
+    invert_shift_rows();
+    invert_substitute();
+    add_round_key(round);
+    invert_mix_columns();
+  }
+
+  // The last round is given below.
+  invert_shift_rows();
+  invert_substitute();
+  add_round_key(0);
+
+}
