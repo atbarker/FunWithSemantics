@@ -37,6 +37,17 @@ function listContains<T>(x:List<T>, element:T):bool
       case Cons(value, xRest) => value == element || listContains(xRest, element) 
 }
 
+ghost method appendLists<T>(x:List<T>, y:List<T>, element:T)
+ensures listContains(append(x, y), element) <==> listContains(x, element) || listContains(y, element)
+{
+  match(x)
+  case Nil => {}
+  case Cons(x1, xRest) => {
+    assert(listContains(append(x,y), element)
+      == listContains(append(Cons(x1, xRest), y), element)
+    );
+  }
+}
 
 method sameElements<T>(tree:Tree<T>, element:T)
 ensures treeContains(tree, element) <==> listContains(flatten(tree), element)
@@ -48,6 +59,19 @@ ensures treeContains(tree, element) <==> listContains(flatten(tree), element)
       }
    }
    case Node(Tree1, Tree2, node) => {
-     
+     assert(treeContains(tree, element)
+       == treeContains(Node(Tree1, Tree2, node), element)
+       == (node == element || treeContains(Tree1, element) || treeContains(Tree2, element))
+     );
+     //have to prove the relationship between the two trees
+     appendLists(flatten(Tree1), flatten(Tree2), element);
+     assert(listContains(flatten(tree), element)
+       == listContains(flatten(Node(Tree1, Tree2, node)), element)
+       == listContains(Cons(node, append(flatten(Tree1), flatten(Tree2))), element)
+       == ((node == element) || listContains(append(flatten(Tree1), flatten(Tree2)), element))
+       == ((node == element) || listContains(flatten(Tree1), element) || listContains(flatten(Tree2), element))
+     );
+     sameElements(Tree1, element);
+     sameElements(Tree2, element);
    }
 }
