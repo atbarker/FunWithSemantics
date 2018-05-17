@@ -1,4 +1,4 @@
-datatype Tree<T> = Leaf(T) | Node(Tree<T>, Tree<T>, T)
+datatype Tree<T> = Leaf | Node(Tree<T>, Tree<T>, T)
 datatype List<T> = Nil | Cons(T, List<T>)
 
 //this one should call append
@@ -7,34 +7,47 @@ function flatten<T>(tree:Tree<T>):List<T>
 {
   match(tree)
       case Node(Tree1, Tree2, node) => Cons(node, append(flatten(Tree1), flatten(Tree2)))
-      case Leaf(T) => Cons(T, Nil)
+      case Leaf => Nil
 }
 
 //Pain
+//this function is straight out of the in class examples
 function append<T>(xs:List<T>, ys:List<T>):List<T>
+//ensures (xs == Nil) ==> (append(xs, ys) == ys)
+//ensures (ys == Nil) ==> (append(xs, ys) == xs)
 {
 	match(xs)
 		case Nil => ys
-		case Cons(xsFirst, xsRest) =>  Cons(xsFirst, append(xsRest, ys))
+		case Cons(z, zs) => Cons(z, append(zs, ys))
 }
 
+//traverse the tree and look for things
 function treeContains<T>(tree:Tree<T>, element:T):bool
 {
-	listContains(flatten(tree), element)
+	//listContains(flatten(tree), element)
+  match(tree)
+      case Node(Tree1, Tree2, node) => (node == element || treeContains(Tree1, element) || treeContains(Tree2, element))
+      case Leaf => false
 }
 
 function listContains<T>(x:List<T>, element:T):bool
 {
 	match(x)
       case Nil => false
-      case Cons(T, xRest) => if T == element 
-                             then true 
-                             else listContains(xRest, element) 
+      case Cons(value, xRest) => value == element || listContains(xRest, element) 
 }
 
 
-lemma sameElements<T>(tree:Tree<T>, element:T)
+method sameElements<T>(tree:Tree<T>, element:T)
 ensures treeContains(tree, element) <==> listContains(flatten(tree), element)
 {
-	
+   match(tree)
+   case Leaf => {
+     calc{ treeContains(tree, element) 
+       == listContains(flatten(tree), element);
+      }
+   }
+   case Node(Tree1, Tree2, node) => {
+     
+   }
 }
