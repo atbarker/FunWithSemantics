@@ -49,7 +49,7 @@ ensures listContains(append(x, y), element) <==> listContains(x, element) || lis
   }
 }
 
-method sameElements<T>(tree:Tree<T>, element:T)
+lemma sameElements<T>(tree:Tree<T>, element:T)
 ensures treeContains(tree, element) <==> listContains(flatten(tree), element)
 {
    match(tree)
