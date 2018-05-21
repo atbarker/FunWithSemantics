@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-
+//obtained from http://www.charmysoft.com/app/rc4-cipher
 int rc4(const void *input, void *output, size_t buflen, const char *key, size_t keylen){
     char s[256];
     char *state = s;
