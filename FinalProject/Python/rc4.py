@@ -24,18 +24,17 @@ def prga(state):
         k = state[(state[i] + state[j]) % 256]
         yield k
 
+#more convenient encoding for the key
 def key_to_ord(s):
     return [ord(c) for c in s]
 
-
+#main
 def main():
-
     key = 'key'
     plain = 'yippee ki yay motherf*ckers'
     ciphertext = [len(plain)]
 
     key = key_to_ord(key)
-    
     S = ksa(key)
     keystream = prga(S)
 
@@ -45,9 +44,7 @@ def main():
     print("Ciphertext:")
     for c in plain:
         sys.stdout.write("%02X" % (ord(c) ^ keystream.next()))
-    
     print
     
-
 if __name__ == "__main__":
     main()
