@@ -148,7 +148,11 @@ int main( int argc, char* argv[] ) {
     while(1) {
         itemsRead = fread(inputBuffer, sizeof(unsigned char), bufferLength, infile);
         itemsRead = itemsRead;
+        clock_t begin = clock();
         rc4(keyArray, keySize, inputBuffer, outputBuffer, itemsRead);
+        clock_t end = clock();
+        double timespent = (double)(end - begin)/CLOCKS_PER_SEC;
+        printf("Time for execution:  %f\n", timespent);
         fwrite(outputBuffer, sizeof(unsigned char), itemsRead, outfile);
 
         if (itemsRead != bufferLength) {
