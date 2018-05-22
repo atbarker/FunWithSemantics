@@ -1,4 +1,5 @@
 import sys
+import time
 
 #key scheduling algorithm, initializes the state
 def ksa(key):
@@ -28,22 +29,35 @@ def prga(state):
 def key_to_ord(s):
     return [ord(c) for c in s]
 
+def enc(plain, key, length):
+    S = ksa(key)
+    keystream = prga(S)
+    ciphertext = [0]*length
+    for c in range(0, length-1):
+        ciphertext[c] = (plain[c] ^ keystream.next())
+    
+    return ciphertext
+
 #main
 def main():
     key = 'key'
     plain = 'yippee ki yay motherf*ckers'
-    ciphertext = [len(plain)]
+    length = len(plain)
 
     key = key_to_ord(key)
-    S = ksa(key)
-    keystream = prga(S)
+    plain_ord = key_to_ord(plain)
 
     print("Plaintext:")
     print(plain)
-    
+    t0 = time.clock()
+    cipher = enc(plain_ord, key, length) 
+    t1 = time.clock()
+    print("Time in seconds %f" % (t1-t0))
     print("Ciphertext:")
-    for c in plain:
-        sys.stdout.write("%02X" % (ord(c) ^ keystream.next()))
+    
+    
+    for c in cipher:    
+        sys.stdout.write("%02X" % c)
     print
     
 if __name__ == "__main__":
