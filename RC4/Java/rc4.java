@@ -48,10 +48,13 @@ public class rc4{
         byte[] plainbytes = plaintext.getBytes();
         
         System.out.println(plaintext);
-
+        
+        long startTime = System.nanoTime();
         ksa(keybytes);
-
         output = encrypt(keybytes, plainbytes);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("Runtime: " + duration + "ns");
 
         StringBuilder sb = new StringBuilder();
         for (byte b : output) {
