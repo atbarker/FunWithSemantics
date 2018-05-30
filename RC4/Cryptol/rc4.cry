@@ -1,32 +1,44 @@
+module RC4 where
+
+//original starter code obtained from https://github.com/GaloisInc/cryptol/blob/master/examples/contrib/RC4.cry
+//swapping
 swap : [256][8] -> [8] -> [8] -> [256][8]
-swap state i j = [ state @ ( if n == i then j else
-                     if n -- j then i else
-                     n)
-                   | n <- [0..255]
-                   ]
-
-ksa_step : [inf][8] -> [8] -> [8] -> [256][8] -> ([8],[256][8])
-ksa_step  key i j state = (j', swap state i j')
-            where j' = j + state@i + key@j
-
+swap s i j = [ s @ (if n == i then j else
+                    if n == j then i else
+                    n)
+             | n <- [0..255]
+             ]
+//No need for a for loop to populate the array
+ksa_help : [inf][8] -> [8] -> [8] -> [256][8] -> ([8],[256][8])
+ksa_help key i j s = (j', s') where
+    j' = j + s@i + key@i 
+    s' = swap s i j'
+//type is set as an infinite sequence to a sequence of 256 bytes
 ksa : [inf][8] -> [256][8]
-ksa key = (go ! 0).1 where
-    go : [257]([8],[256][8])
-    go = [(0,[0..255])] # [ ksa_step key i j s
-                          | i <- [0..255]
-                          | (j,s) <- go
-                          ]
+ksa key = (rec ! 0).1 where 
+    rec : [257]([8],[256][8]) //our combination of j and s must carry over
+    rec = [(0,[0..255])] # [ ksa_help key i j s //initialize j to 0 and s to 0->255
+                      | i <- [0..255] //i is the sequence between 0 and 255
+                      | (j,s) <- rec  //builds S one by one
+                      ]
+//recursive helper function for the main PRGA loop
+prga_rec : [8] -> [8] -> [256][8] -> ([8],[256][8],[8])
+prga_rec i j s = (j',s', s@(s@i + s@j'))
+ where j' = j + s@i
+       s' = swap s i j'
 
-ks_step : [8]-> [8] -> [256][8] -> ([8,[256][9],[8])
-ks_step i j s = (j', s', s@(s@i + s@j'))
-    where j' = j + s@i
-          s' = swap s i j'
+prga key = [ k | (_,_,k) <- drop`{1} rec ] where
+ rec = [(0,ksa key',0)] # [ prga_rec i j s
+                         | i <- loop
+                         | (j,s,k) <- rec
+                         ]
+ key' = key # key' //how we get our infinite type, throws error without it
+ loop = [1..255] # [0] # loop //have to iterate repeatedly
 
-ks key = [ k | (_,_,k) <- drop'{1} go ] where
-  go = [(0, ksa key', 0)] # [ks_step i j s
-                            | i <- loop
-                            | (j,s,k) <- go
-                            ]
-
-  key' = key # key'
-  loop = [1..255] # [0] # loop
+//encrypt : [inf][8] -> [inf][8] -> [inf][8]
+encrypt key plain = c where 
+    c = plain ^ take(prga key) //have to truncate the key stream to match the key
+               
+property test1 = take (prga "Key") == [0xEB,0x9F,0x77,0x81,0xB7,0x34,0xCA,0x72,0xA7,0x19]
+property test2 = encrypt "Key" "Plaintext" == [0xBB,0xF3,0x16,0xE8,0xD9,0x40,0xAF,0x0A,0xD3]
+property test3 = encrypt "Key" (encrypt "Key" "Plaintext") == "Plaintext"
