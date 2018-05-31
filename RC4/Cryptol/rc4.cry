@@ -1,18 +1,21 @@
-module RC4 where
 
 //original starter code obtained from https://github.com/GaloisInc/cryptol/blob/master/examples/contrib/RC4.cry
 //swapping
+
+module RC4 where
 swap : [256][8] -> [8] -> [8] -> [256][8]
 swap s i j = [ s @ (if n == i then j else
                     if n == j then i else
                     n)
              | n <- [0..255]
              ]
+             
 //No need for a for loop to populate the array
 ksa_help : [inf][8] -> [8] -> [8] -> [256][8] -> ([8],[256][8])
 ksa_help key i j s = (j', s') where
     j' = j + s@i + key@i 
     s' = swap s i j'
+
 //type is set as an infinite sequence to a sequence of 256 bytes
 ksa : [inf][8] -> [256][8]
 ksa key = (rec ! 0).1 where 
@@ -21,19 +24,20 @@ ksa key = (rec ! 0).1 where
                       | i <- [0..255] //i is the sequence between 0 and 255
                       | (j,s) <- rec  //builds S one by one
                       ]
-//recursive helper function for the main PRGA loop
+
+//recurrence helper function for the main PRGA loop
 prga_rec : [8] -> [8] -> [256][8] -> ([8],[256][8],[8])
-prga_rec i j s = (j',s', s@(s@i + s@j'))
- where j' = j + s@i
-       s' = swap s i j'
+prga_rec i j s = (j',s', s@(s@i + s@j')) where 
+          j' = j + s@i
+          s' = swap s i j'
 
 prga key = [ k | (_,_,k) <- drop`{1} rec ] where
- rec = [(0,ksa key',0)] # [ prga_rec i j s
-                         | i <- loop
-                         | (j,s,k) <- rec
-                         ]
- key' = key # key' //how we get our infinite type, throws error without it
- loop = [1..255] # [0] # loop //have to iterate repeatedly
+    rec = [(0,ksa key',0)] # [ prga_rec i j s
+                      | i <- loop
+                      | (j,s,k) <- rec
+                      ]
+    key' = key # key' //how we get our infinite type, throws error without it
+    loop = [1..255] # [0] # loop //have to iterate repeatedly
 
 //encrypt : [inf][8] -> [inf][8] -> [inf][8]
 encrypt key plain = c where 
