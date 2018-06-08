@@ -1,5 +1,3 @@
-
-
 ;;;define a global state for our algorithm
 (defvar rc4-i 0)
 (defvar rc4-j 0)
@@ -20,7 +18,6 @@
 
 ;;;RC4 key scheduling algorithm
 (defun ksa (key)
-    ;;(interactive "sEnter key: ")
     (let ((j 0) i)
         (dotimes (i 256 state)
             (setf j (mod (+ j
@@ -28,10 +25,8 @@
                 (aref key (mod i (length key)))) 256))
             (swap i j))))
 
-
 ;;;PRGA for rc4
 (defun prga ()
-    ;;(interactive)
     (setf rc4-i (mod (+ 1 rc4-i) 256))
     (setf rc4-j (mod (+ rc4-j (aref state rc4-i)) 256))
     (swap (aref state rc4-i) (aref state rc4-j))
@@ -39,12 +34,11 @@
                       (aref state rc4-j)) 256)))
 
 ;;;encrypt or decrypt some text
-(defun encdec (data cipher key)
-    ;;(interactive "r\nsEnter key:")
+(defun encdec (data cipher key len)
     (initialize)
     (ksa key)
     (let (c)
-    (loop for c from 0 to 1280 do 
+    (loop for c from 0 to len do 
         (setf (aref cipher c) (logxor (aref data c) (prga))))))
 
 ;;;Read in a file
@@ -55,14 +49,15 @@
             contents)))
 
 (defun string-bytes (in)
-    (map '(simple-array (unsigned-byte 8) (*)) 'char-code in))
 
+    (map '(simple-array (unsigned-byte 8) (*)) 'char-code in))
 
 (defvar key (string-bytes (file-get-contents "key.txt")))
 (defvar data (string-bytes (file-get-contents "data.txt")))
+(defvar len (length data))
 (defvar cipher (make-array (length data) :element-type '(unsigned-byte 8)))
 (defvar unenc (make-array (length data) :element-type '(unsigned-byte 8)))
-(time (reduce #'+ (encdec data cipher key)))
+(time (encdec data cipher key (- len 1)))
 ;;;(print data)
 ;;;(print cipher)
 ;;;(encdec data cipher key)

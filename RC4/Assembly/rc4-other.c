@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <ctype.h>
 
 //obtained from http://www.charmysoft.com/app/rc4-cipher
 int rc4(const void *input, void *output, size_t buflen, const char *key, size_t keylen){
@@ -93,5 +97,20 @@ cd:
 	loop cd
     }
 
-    return bufferLength;
+    return buflen;
+}
+
+int main(){
+    void *output;
+    const char *key = "thisisakey";
+    size_t keylen = 10;
+    size_t buflen = 1400;
+    char* input = "Friends, Romans, countrymen, lend me your ears; I come to bury Caesar, not to praise him. The evil that men do lives after them; The good is oft interred with their bones; So let it be with Caesar. The noble BrutusHath told you Caesar was ambitious:If it were so, it was a grievous fault,And grievously hath Caesar answer'd it.Here, under leave of Brutus and the restFor Brutus is an honourable man;So are they all, all honourable menCome I to speak in Caesar's funeral.He was my friend, faithful and just to me:But Brutus says he was ambitious;And Brutus is an honourable man.He hath brought many captives home to RomeWhose ransoms did the general coffers fillDid this in Caesar seem ambitious?When that the poor have cried, Caesar hath wept:Ambition should be made of sterner stuff:Yet Brutus says he was ambitious;And Brutus is an honourable man.You all did see that on the LupercalI thrice presented him a kingly crown,Which he did thrice refuse, was this ambition?Yet Brutus says he was ambitious;And, sure, he is an honourable man.I speak not to disprove what Brutus spoke,But here I am to speak what I do know.You all did love him once, not without cause:What cause withholds you then, to mourn for him?O judgment! thou art fled to brutish beasts,And men have lost their reason. Bear with me;My heart is in the coffin there with Caesar, And I must pause till it come back to me.";
+    
+    clock_t begin = clock();
+    rc4((const void*)input, output, buflen, key, keylen);
+    clock_t end = clock();
+    double timespent = (double)(end - begin)/CLOCKS_PER_SEC;
+    printf("Time for execution:  %f\n", timespent);
+    return 0;
 }
