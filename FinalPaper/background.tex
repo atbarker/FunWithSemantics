@@ -1,1 +1,19 @@
 \section{Background}
+
+\subsection{Domain Specific Languages}
+
+\subsection{Cryptol}
+
+\subsection{Implementing Cryptographic Algorithms}
+
+\subsection{RC4}
+
+Rivest Cipher 4 (RC4), also known as ARC4, is a relatively common and simple stream cipher that we have 
+used for evaluating different languages in terms of their ability to securely and reliably implement 
+cryptographic algorithms. In a stream cipher a stream of pseudorandom bits are generated and then combined 
+with the plaintext via an operation such as a bitwise exclusive-or (XOR). The cipher consists of two main 
+components, a key scheduling algorithm (KSA) and a pseudo-random generator algorithm (PRGA). The key scheduling algorithm 
+takes in a supplied key to generate a permutation of all $256$ possible bytes. This is used a seed for the 
+PRGA which iterates over the permutation of bytes generating a pseudo-random key stream equal in length to 
+the plaintext. This key stream is then combined with the plaintext using a bitwise XOR. The same operation is 
+then repeated in order to retrieve the plaintext.

@@ -1,3 +1,81 @@
 \section{Implementation}
+In order to evaluate the need for a domain specific programming language we implemented a basic stream cipher, RC4, 
+in a variety of different programming languages. Although it is no longer commonly used or secure, RC4 encompasses 
+the basic bitwise operations necessary for implementing cryptographic algorithms. We focus on the base functionality 
+of each language and ignore most libraries and API functions beyond what is absolutely necessary. In the case of C we 
+assume that the same behavior observed is also true for C++.
+
+\subsection{C}
+Commonly used for implementing cryptographic algorithms for kernel development, systems libraries, and embedded applications 
+where there is no hardware implementation. C provides maximum freedom out of our implementations as the programmer has access 
+to the actual memory locations where data is stored. In the hands of a competent and attentive programmer C allows for maximum 
+performance and an assurance that certain memory operations have taken place. Such as zeroing memory with \texttt{memset()} used to store a key after 
+it has been freed. Bitwise operations and substitution is relatively easy in C even though there is no access to individual bits. The representation of 
+Strings as an array of characters also makes it easy to convert them into arrays of bytes. Lastly, the presence of a multitude of different unsigned 
+data types and type checking at compile time helps to protect the programmer from easy mistakes. Most errors, such as type issues, in a program are 
+also caught at compile time therefore avoiding costly mistakes from appearing in a production environment.
+
+The same flexibility that manual memory management that C provides is also its greatest weakness. The danger of a buffer overflow is significant with 
+applications written in C. Commonly used operations such as \texttt{strcpy()}, \texttt{gets()}, and \texttt{strcmp()} do not check the length of 
+their inputs therefore leaving any program using them vulnerable to carefully selected inputs which can leak information. For instance calling any 
+string comparison method, like \texttt{strcmp()}, which compares two strings character by character will leak the length of said string. A programmer must also be 
+careful when determining the size of a piece of data in memory. If using a structure for managing data padding can be inserted between variables and when the 
+function \texttt{sizeof()} is called on a pointer it returns the length of a memory address, not the data at that memory address. Compilers and the standard 
+library also pose issues. The standard library is used for many basic operations in C but sadly many parts of this library such as the random number generator 
+are not cryptographically secure. Most C compilers offer some form of optimization that can introduce inintended or undefined behavior into the resulting 
+program. For instance undefined behavior is especially common when using the second and third optimization settings with the Gnu C Compiler.
+
+\subsection{Lisp}
+Among the many dialects of Lisp available we used Common Lisp, primarily due to its popularity as the name would imply. Lisp allows us to represent our plaintext, 
+ciphertext, and key as lists of bytes. Which allows for relatively simple bitwise operations even though as with C we have no access to individual bits. The functional
+paradigm also lends itself well to how cryptographic algorithms are constructed. With multiple operations occuring one after the other on a stream of data. The primary 
+advantage of Lisp is that it is a garbage collected language. Unlike C this means that the language is memory safe. While enforcement of limits on allocated 
+regions of memory removes the possibility for things like buffer overflow and misjudging the size of a region in memory it also hides what machine code is actually 
+being executed.
+
+\subsection{Python}
+While celebrated for its simplicity, accessibility and similarity to pseudocode often used to express cryptographic algorithms in specifications. Our KSA and PRGA 
+in Python are virtually identical to the pseudocode used as a basis for all our implementations. Python is not very well suited to the task of implementing 
+cryptographic algorithms. Primarily due to its weak type system that does not enforce anything before running a program. In addition to this major flaw occassionally type 
+errors never appear as the Python interpreter may perform implicit type conversions at runtime.
+
+\subsection{Java}
+As one of the most commonly used programming languages and a prime example of an object oriented paradigm, Java is an obvious choice for our lineup of programming languages.
+Syntactically Java is similar to C and in some cases identical for many of the operations that are used in implementing RC4. The biggest difference being that Java manages 
+memory for the programmer and that it lacks a data type for an unsigned byte. This first point is more of an advantage than a drawback as manual memory management is the 
+source of most of the weaknesses in C. Although it does open the door for uncertaintly about what is actually being executed by the Java Virtual Machine and whether or not 
+its memory is securely being freed. The lack of an unsigned byte type in Java means that while one can represent a stream of bytes as an array, one must either use multiple 
+API functions such as a \texttt{BitSet} or juggle type casting and bit masking each time an operation on an individual byte is desired. There is also the fact that 
+strings are represented as Java objects instead of as a primitive data type so a user is not entirely sure what could be leaked when converting a string into an array of 
+bytes.
+
+\subsection{Cryptol}
+The strong typing explicitly declared by the programmer preceding each function that was inherited from Haskell puts Cryptol well ahead of its competition in terms of 
+type systems.
 
 \section{Evaluation}
+Here we compare our implementations of RC4 in terms of performance, lines of code, and a qualitative analysis. For performance we measure latency and throughput for 
+each implementation with the exception of Cryptol as we have not yet found an effective way to benchmark its performance.
+
+\subsection{Performance}
+
+%\begin{figure}
+%\centerline{ 
+%\includegraphics[width = 0.5\textwidth]{transmitlan.png}}
+%\caption{Time required to transmit versus size of message over a LAN. Repeated for both one message per bit and three messages per bit.}
+%\label{fig:lan}
+%\end{figure}
+
+%\begin{figure}
+%\centerline{ 
+%\includegraphics[width = 0.5\textwidth]{transmitlan.png}}
+%\caption{Time required to transmit versus size of message over a LAN. Repeated for both one message per bit and three messages per bit.}
+%\label{fig:lan}
+%\end{figure}
+
+
+\subsection{Qualitative Analysis}
+
+No language, even Cryptol, adequately protects against timing attacks as each will allow a programmer to utilize the length of a secret 
+to define the number of iterations in a recursive statement or a loop. This is a difficult issue as it would require the programmer to 
+either classify a piece of data as a secret, perhaps similarly to how a variable can be \texttt{const} or \texttt{static} in C.
