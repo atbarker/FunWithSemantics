@@ -59,6 +59,10 @@ each implementation with the exception of Cryptol as we have not yet found an ef
 
 \subsection{Performance}
 
+We evaluated the performance of our implementations for both latency and throughput. In order to measure this we encrypted Mark Antony's 
+monologue from Act $3$ Scene $2$ of Shakespeare's play \emph{Julius Caesar} using a relatively short 12 character key. We used Python version 2.7, OpenJDK 8, GNU Clisp 2.49, SBCL 1.3.1, and GCC 5.4. Due to the large variability between the behavior of Common Lisp interpreters we evaluated 
+two of the most common GNU Clisp and SBCL.
+
 \begin{figure}
 \centerline{ 
 \includegraphics[width = 0.5\textwidth]{latency.PNG}}
@@ -66,12 +70,16 @@ each implementation with the exception of Cryptol as we have not yet found an ef
 \label{fig:lan}
 \end{figure}
 
+We can see here that the fastest language by far is C with just under 100 milliseconds. Closely following is Java and the SBCL Lisp result. The Python and GNU Clisp results are the slowest. Especially the GNU lisp with a latency almost approaching one hundreth of a second.
+
 \begin{figure}
 \centerline{ 
 \includegraphics[width = 0.5\textwidth]{throughput.PNG}}
 \caption{Latency for encrypting or decrypting bytes.}
 \label{fig:lan}
 \end{figure}
+
+Similar trends are shown in the throughput. With C being the leader, followed in the same order by Java, SBCL, Python, and GNU Clisp.
 
 
 \subsection{Qualitative Analysis}
