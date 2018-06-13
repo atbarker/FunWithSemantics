@@ -10,6 +10,8 @@ In keeping with these specifications, Agosta and Pelosi \cite{Agosta} attempt to
 
 Nielsen and Schwartzbach \cite{Nielson} describe a programming language for secure multiparty communication. While this approach does not focus specifically on a language for the development and testing  of encryption algorithms, it does attempt to bridge the gap between high-level requirements and low level development. This focus provides a framework for development with a distinction between client and server with built-in, provably secure tunneling.  While their proposal is an imperative style DSL, they do not formally address how side effects created by primitive operations affect provable security.
 
+A homomorphic encrytption platform is proposed by Bain et al. \cite{Bain}. This platform would support secret sharing execution while discourage leaks by server collusion. The DSL is built on Haskell and C++ and avoids any unusual language restrictions by relying on the Haskell type system. More specifically, the Haskell constructs employed are monads and type classes. Though, it is not clear from the paper whether or not there is an actual formal verification system that is incorporated.  
+
 
 \subsection{Cryptol}
 
