@@ -70,17 +70,16 @@ two of the most common GNU Clisp and SBCL.
 \label{fig:lan}
 \end{figure}
 
-We can see here that the fastest language by far is C with just under 100 milliseconds. Closely following is Java and the SBCL Lisp result. The Python and GNU Clisp results are the slowest. Especially the GNU lisp with a latency almost approaching one hundreth of a second.
+In figure \ref{fig:lan} we see that the fastest language by far is C with just under 100 milliseconds. Closely following is Java and the SBCL Lisp result. The Python and GNU Clisp results are the slowest. Especially the GNU lisp with a latency almost approaching one hundreth of a second.
 
 \begin{figure}
 \centerline{ 
 \includegraphics[width = 0.5\textwidth]{throughput.PNG}}
 \caption{Latency for encrypting or decrypting bytes.}
-\label{fig:lan}
+\label{fig:ban}
 \end{figure}
 
 Similar trends are shown in the throughput. With C being the leader, followed in the same order by Java, SBCL, Python, and GNU Clisp. Overall it is not surprising that C wins in terms of performance. With Lisp one must be careful with what interpreter/compiler is used. Java possesses decent performance and Python is slow.
-
 
 \subsection{Qualitative Analysis}
 
