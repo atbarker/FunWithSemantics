@@ -12,6 +12,8 @@ Nielsen and Schwartzbach \cite{Nielson} describe a programming language for secu
 
 A homomorphic encrytption platform is proposed by Bain et al. \cite{Bain}. This platform would support secret sharing execution while discourage leaks by server collusion. The DSL is built on Haskell and C++ and avoids any unusual language restrictions by relying on the Haskell type system. More specifically, the Haskell constructs employed are monads and type classes. Though, it is not clear from the paper whether or not there is an actual formal verification system that is incorporated.  
 
+With cPLC, Bangerter et al. \cite{Bangerter} propose a compiler and implementation language for two-party cryptographic protocols. The paper focuses mostly on compiler design and implementation leaving only a small discussion regarding the inclusion of the input language. Furthermore, the input language uses branching and loops which are known to cause information leakage. 
+
 
 \subsection{Cryptol}
 
