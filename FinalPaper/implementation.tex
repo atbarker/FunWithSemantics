@@ -99,7 +99,8 @@ Similar trends are shown in the throughput. With C being the leader, followed in
 
 No language, even Cryptol, adequately protects against timing attacks as each will allow a programmer to utilize the length of a secret 
 to define the number of iterations in a recursive statement or a loop. This is a difficult issue as it would require the programmer to 
-either classify a piece of data as a secret, perhaps similarly to how a variable can be \texttt{const} or \texttt{static} in C.
+either classify a piece of data as a secret, perhaps similarly to how a variable can be \texttt{const} or \texttt{static} in C. Although 
+including such a feature would be insecure as it would be attributing a seperate type to secret information.
 
 While Cryptol allows for us to easily verify the correctness of a program it is not clear how to use or even benchmark the verified program 
 in an easy to use manner. Ideally one would be able to compile the verified implementation to a binary for use in other programs as a linkable 
