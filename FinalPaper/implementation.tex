@@ -55,7 +55,7 @@ type systems.
 
 \section{Evaluation}
 Here we compare our implementations of RC4 in terms of performance, lines of code, and a qualitative analysis. For performance we measure latency and throughput for 
-each implementation with the exception of Cryptol as we have not yet found an effective way to benchmark its performance.
+each implementation with the exception of Cryptol as we have not yet found an effective way to benchmark its performance. As for lines of code we count only the lines used to implement the basic functionality of the RC4 algorithm. So for C we have $50$ lines, Java has $43$, Lisp has $45$, Python with $28$, and Cryptol with $32$.
 
 \subsection{Performance}
 
@@ -79,7 +79,7 @@ We can see here that the fastest language by far is C with just under 100 millis
 \label{fig:lan}
 \end{figure}
 
-Similar trends are shown in the throughput. With C being the leader, followed in the same order by Java, SBCL, Python, and GNU Clisp.
+Similar trends are shown in the throughput. With C being the leader, followed in the same order by Java, SBCL, Python, and GNU Clisp. Overall it is not surprising that C wins in terms of performance. With Lisp one must be careful with what interpreter/compiler is used. Java possesses decent performance and Python is slow.
 
 
 \subsection{Qualitative Analysis}
