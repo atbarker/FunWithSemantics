@@ -55,23 +55,31 @@ type systems.
 
 \section{Evaluation}
 Here we compare our implementations of RC4 in terms of performance, lines of code, and a qualitative analysis. For performance we measure latency and throughput for 
-each implementation with the exception of Cryptol as we have not yet found an effective way to benchmark its performance.
+each implementation with the exception of Cryptol as we have not yet found an effective way to benchmark its performance. As for lines of code we count only the lines used to implement the basic functionality of the RC4 algorithm. So for C we have $50$ lines, Java has $43$, Lisp has $45$, Python with $28$, and Cryptol with $32$.
 
 \subsection{Performance}
 
-%\begin{figure}
-%\centerline{ 
-%\includegraphics[width = 0.5\textwidth]{transmitlan.png}}
-%\caption{Time required to transmit versus size of message over a LAN. Repeated for both one message per bit and three messages per bit.}
-%\label{fig:lan}
-%\end{figure}
+We evaluated the performance of our implementations for both latency and throughput. In order to measure this we encrypted Mark Antony's 
+monologue from Act $3$ Scene $2$ of Shakespeare's play \emph{Julius Caesar} using a relatively short 12 character key. We used Python version 2.7, OpenJDK 8, GNU Clisp 2.49, SBCL 1.3.1, and GCC 5.4. Due to the large variability between the behavior of Common Lisp interpreters we evaluated 
+two of the most common GNU Clisp and SBCL.
 
-%\begin{figure}
-%\centerline{ 
-%\includegraphics[width = 0.5\textwidth]{transmitlan.png}}
-%\caption{Time required to transmit versus size of message over a LAN. Repeated for both one message per bit and three messages per bit.}
-%\label{fig:lan}
-%\end{figure}
+\begin{figure}
+\centerline{ 
+\includegraphics[width = 0.5\textwidth]{latency.PNG}}
+\caption{Latency for encrypting or decrypting bytes.}
+\label{fig:lan}
+\end{figure}
+
+We can see here that the fastest language by far is C with just under 100 milliseconds. Closely following is Java and the SBCL Lisp result. The Python and GNU Clisp results are the slowest. Especially the GNU lisp with a latency almost approaching one hundreth of a second.
+
+\begin{figure}
+\centerline{ 
+\includegraphics[width = 0.5\textwidth]{throughput.PNG}}
+\caption{Latency for encrypting or decrypting bytes.}
+\label{fig:lan}
+\end{figure}
+
+Similar trends are shown in the throughput. With C being the leader, followed in the same order by Java, SBCL, Python, and GNU Clisp. Overall it is not surprising that C wins in terms of performance. With Lisp one must be careful with what interpreter/compiler is used. Java possesses decent performance and Python is slow.
 
 
 \subsection{Qualitative Analysis}
