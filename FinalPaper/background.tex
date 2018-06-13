@@ -16,6 +16,25 @@ A homomorphic encrytption platform is proposed by Bain et al. \cite{Bain}. This 
 \subsection{Cryptol}
 
 \subsection{Implementing Cryptographic Algorithms}
+There are many considerations that must be taken into account while implementing cryptographic algorthims and cipher or more broadly anything related to the security of 
+a computing system. One could easily produce multiple papers giving just an overview of the problems programmers face. We limit ourselves to a relatively brief overview.
+
+First is the issue of comparison methods. If a programmer uses a comparison method for two secret pieces of information which possesses a runtime analogous to the length 
+of the secret data the program is difficult to a timing attack. In which an adversary derives the length of a secret from the amount of time taken to process the secret. 
+Leaking the length of a secret piece of information drastically reduces the search space for a brute force attack against a cipher. A solution for this is to use a 
+constant time comparison method which is not common used in many languages. A similar issue exists when branches (loops or recursion) are controlled by secret data. The 
+number of iterations can betray the length of the secret.
+
+Compiler or interpreter optimizations must be conciously avoided as they can introduce unintended behavior into the executing program. For instance some compilers will 
+optimize out \texttt{memset} operations used to set a piece of memory that once held a secret to all zeros.
+
+Data type selection is crucial in cryptographic applications. All binary data must be represented by unsigned bytes. Not using unsigned data types or some workaround allows 
+for buffer overflow and underflow errors to compromise the operational correctness of an implementation. It is also not advisable to use different data types for secret or 
+non-secret information as different types will let an adversary identify pieces of data as secret or non-secret.
+
+Lastly many languages either have built in calls to generate random numbers or provide libraries to do so. These random number generators are often not suitable for use 
+in cryptographic applications as they do not achieve the required level of entropy. A programmer must be concious of their source of random number and select those that are 
+cryptographically secure such as the Linux/Unix kernel's \texttt{/dev/random}.
 
 \subsection{RC4}
 

@@ -23,7 +23,8 @@ careful when determining the size of a piece of data in memory. If using a struc
 function \texttt{sizeof()} is called on a pointer it returns the length of a memory address, not the data at that memory address. Compilers and the standard 
 library also pose issues. The standard library is used for many basic operations in C but sadly many parts of this library such as the random number generator 
 are not cryptographically secure. Most C compilers offer some form of optimization that can introduce inintended or undefined behavior into the resulting 
-program. For instance undefined behavior is especially common when using the second and third optimization settings with the Gnu C Compiler.
+program. For instance undefined behavior is especially common when using the second and third optimization settings with the Gnu C Compiler. Lastly even though most 
+compilers perform type checking and other error detection at compile time, many problems are expressed as warnings that can easily be ignored by the programmer.
 
 \subsection{Lisp}
 Among the many dialects of Lisp available we used Common Lisp, primarily due to its popularity as the name would imply. Lisp allows us to represent our plaintext, 
@@ -51,7 +52,18 @@ bytes.
 
 \subsection{Cryptol}
 The strong typing explicitly declared by the programmer preceding each function that was inherited from Haskell puts Cryptol well ahead of its competition in terms of 
-type systems.
+type systems. Cryptol operates on sequences of bits and is really the only family of data types used in the language. Even strings and characters are described as just a 
+sequence of bits which makes processing the inputs for a algorithm trivial. Unlike any other language that we have examined Cryptol allows access to individual bits in a 
+stream and a fully featured assortment of bitwise operations. For instance our permutation of all possible bytes is described by the type \texttt{[256][8]} and an 
+infinite sequence of bytes is expressed as \texttt{[inf][8]}. 
+
+As a derivative of Haskell, Cryptol is a functional language and lacks any form of loop structure. Instead the 
+programmer must define recurrence relations which complicates implementation when a algorithm's specification describes using \texttt{for} or \texttt{while} loops like in the 
+case of RC4. While generating the key stream cryptol poses some difficulties as to avoid hard coding the length of a key or input ciphertext/plaintext one must express then as 
+an infinite sequence of bytes. Some infinitely recursive appending of the key to itself becomes necessary in the PRGA function so that an endless keystream can be generated with 
+causing Cryptol to output a type mismatch error. Although the type mismatch error can be seen as a benefit at any problems with data length, inputs, conversions, and bitwise operations 
+are detected before the code is actual run. Here we see the greatest benefit of Cryptol in its capacity to verify programs through the Z3 SMT solver. Lastly similar to languages 
+like Dafny one can declare "properties" that are checked when the program is run in order to prove its correctness.
 
 \section{Evaluation}
 Here we compare our implementations of RC4 in terms of performance, lines of code, and a qualitative analysis. For performance we measure latency and throughput for 
@@ -61,12 +73,13 @@ each implementation with the exception of Cryptol as we have not yet found an ef
 
 We evaluated the performance of our implementations for both latency and throughput. In order to measure this we encrypted Mark Antony's 
 monologue from Act $3$ Scene $2$ of Shakespeare's play \emph{Julius Caesar} using a relatively short 12 character key. We used Python version 2.7, OpenJDK 8, GNU Clisp 2.49, SBCL 1.3.1, and GCC 5.4. Due to the large variability between the behavior of Common Lisp interpreters we evaluated 
-two of the most common GNU Clisp and SBCL.
+two of the most common GNU Clisp and SBCL. Since RC4 is a symmetric cipher and the same operations are applied for both encrypting and decrypting data on the same length inputs there is no difference in
+latency or throughput between the two operations.
 
 \begin{figure}
 \centerline{ 
 \includegraphics[width = 0.5\textwidth]{latency.PNG}}
-\caption{Latency for encrypting or decrypting bytes.}
+\caption{Latency for encrypting or decrypting a 1417 byte message.}
 \label{fig:lan}
 \end{figure}
 
@@ -75,7 +88,7 @@ In figure \ref{fig:lan} we see that the fastest language by far is C with just u
 \begin{figure}
 \centerline{ 
 \includegraphics[width = 0.5\textwidth]{throughput.PNG}}
-\caption{Latency for encrypting or decrypting bytes.}
+\caption{Throughput for encrypting or decrypting bytes.}
 \label{fig:ban}
 \end{figure}
 
@@ -86,3 +99,7 @@ Similar trends are shown in the throughput. With C being the leader, followed in
 No language, even Cryptol, adequately protects against timing attacks as each will allow a programmer to utilize the length of a secret 
 to define the number of iterations in a recursive statement or a loop. This is a difficult issue as it would require the programmer to 
 either classify a piece of data as a secret, perhaps similarly to how a variable can be \texttt{const} or \texttt{static} in C.
+
+While Cryptol allows for us to easily verify the correctness of a program it is not clear how to use or even benchmark the verified program 
+in an easy to use manner. Ideally one would be able to compile the verified implementation to a binary for use in other programs as a linkable 
+library or package. This would allow the average programmer to more reliably and verifiably implement a cryptographic algorithm or cipher.
