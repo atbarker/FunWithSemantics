@@ -24,14 +24,14 @@ careful when determining the size of a piece of data in memory. If using a struc
 function \texttt{sizeof()} is called on a pointer it returns the length of a memory address, not the data at that memory address. Compilers and the standard 
 library also pose issues. The standard library is used for many basic operations in C but sadly many parts of this library such as the random number generator 
 are not cryptographically secure. Most C compilers offer some form of optimization that can introduce inintended or undefined behavior into the resulting 
-program. For instance undefined behavior is especially common when using the second and third optimization settings with the Gnu C Compiler. Lastly even though most 
+program. For instance undefined behavior is especially common when using the second and third optimization settings with the Gnu C Compiler. Lastly, even though most 
 compilers perform type checking and other error detection at compile time, many problems are expressed as warnings that can easily be ignored by the programmer.
 
 \subsection{Lisp}
 Among the many dialects of Lisp available we used Common Lisp, primarily due to its popularity as the name would imply. Lisp allows us to represent our plaintext, 
 ciphertext, and key as lists of bytes. Which allows for relatively simple bitwise operations even though as with C we have no access to individual bits. The functional
 paradigm also lends itself well to how cryptographic algorithms are constructed. With multiple operations occuring one after the other on a stream of data. The primary 
-advantage of Lisp is that it is a garbage collected language. Unlike C this means that the language is memory safe. While enforcement of limits on allocated 
+advantage of Lisp is that it is a garbage collected language. Unlike C, this means that the language is memory safe. While enforcement of limits on allocated 
 regions of memory removes the possibility for things like buffer overflow and misjudging the size of a region in memory it also hides what machine code is actually 
 being executed.
 
